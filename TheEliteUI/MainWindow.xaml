@@ -12,6 +12,7 @@
     <DockPanel>
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
             <DatePicker Name="RankingDatePicker" />
+            <Button Margin="5, 0, 0, 0" Content="Start animation" Name="AnimationButton" Click="AnimationButton_Click" />
         </StackPanel>
         <ListView Name="RankingView" Margin="0, 5, 0, 0" DockPanel.Dock="Bottom" Background="Black">
             <ListView.View>
