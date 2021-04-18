@@ -4,9 +4,62 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TheEliteUI"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        mc:Ignorable="d" Background="Gainsboro" WindowStartupLocation="CenterScreen"
+        Title="MainWindow" Height="900" Width="1600">
+    <Window.Resources>
+        <local:ColorConverter x:Key="ColorConverter" />
+    </Window.Resources>
+    <DockPanel>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+            <DatePicker Name="RankingDatePicker" />
+        </StackPanel>
+        <ListView Name="RankingView" Margin="0, 5, 0, 0" DockPanel.Dock="Bottom" Background="Black">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Rank">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label Content="{Binding Path=Rank}" FontWeight="Bold" Foreground="{Binding Path=PlayerColor, Converter={StaticResource ColorConverter}}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Name">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label Content="{Binding Path=PlayerName}" FontWeight="Bold" Foreground="{Binding Path=PlayerColor, Converter={StaticResource ColorConverter}}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Points">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label Content="{Binding Path=Points}" Foreground="{Binding Path=PlayerColor, Converter={StaticResource ColorConverter}}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Time">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label Content="{Binding Path=CumuledTime}" Foreground="{Binding Path=PlayerColor, Converter={StaticResource ColorConverter}}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Untieds">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label Content="{Binding Path=UntiedRecordsCount}" Foreground="{Binding Path=PlayerColor, Converter={StaticResource ColorConverter}}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Tieds">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label Content="{Binding Path=RecordsCount}" Foreground="{Binding Path=PlayerColor, Converter={StaticResource ColorConverter}}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </DockPanel>
 </Window>
