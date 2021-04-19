@@ -56,7 +56,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ViewModel\RankingViewModel.cs" />
+    <Compile Include="Converters\PointsToWidthConverter.cs" />
+    <Compile Include="Converters\RankingTextConverter.cs" />
+    <Compile Include="Converters\RankingToMedalConverter.cs" />
+    <Compile Include="PlayerRanking.xaml.cs">
+      <DependentUpon>PlayerRanking.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -66,12 +71,16 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="BackProvider.cs" />
-    <Compile Include="ColorConverter.cs" />
+    <Compile Include="Converters\ColorConverter.cs" />
     <Compile Include="IBackProvider.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="PlayerRanking.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\Game.cs" />

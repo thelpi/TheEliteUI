@@ -12,11 +12,13 @@ namespace TheEliteUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        private const int TimerDelay = 1000;
+        private const int TimerDelay = 200;
         private const Game SelectedGame = Game.GoldenEye;
 
         private readonly IBackProvider _provider;
         private readonly Timer _timer;
+        private bool _inProgress;
+        private DateTime _currentDate;
 
         private readonly IReadOnlyDictionary<Game, DateTime> _rankingStart = new Dictionary<Game, DateTime>
         {
@@ -32,44 +34,50 @@ namespace TheEliteUI
         {
             _provider = provider ?? throw new ArgumentNullException(nameof(provider));
             InitializeComponent();
-            RankingDatePicker.SelectedDateChanged += RankingDatePicker_SelectedDateChanged;
-            RankingDatePicker.SelectedDate = _rankingStart[SelectedGame];
+            _currentDate = _rankingStart[SelectedGame];
+            //RankingDatePicker.SelectedDateChanged += RankingDatePicker_SelectedDateChanged;
+            RankingDatePicker.SelectedDate = _currentDate;
             _timer = new Timer(TimerDelay);
             _timer.Elapsed += _timer_Elapsed;
         }
 
         private void _timer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            if (_inProgress)
+            {
+                System.Diagnostics.Debug.WriteLine("Reentrance");
+                return;
+            }
+
+            _inProgress = true;
+
+            if (_currentDate >= DateTime.Today)
+            {
+                Dispatcher.Invoke(() => AnimationButton_Click(null, null));
+                _inProgress = false;
+                return;
+            }
+
+            _currentDate = _currentDate.AddDays(7);
+            if (_currentDate > DateTime.Today)
+            {
+                _currentDate = DateTime.Today;
+            }
+
+            var itemsSource = _provider
+                .GetRankingAsync(SelectedGame, _currentDate)
+                .GetAwaiter()
+                .GetResult()
+                .Select((r, i) => r.WithRank(i + 1))
+                .ToList();
+
             Dispatcher.Invoke(() =>
             {
-                var currentDate = RankingDatePicker.SelectedDate.Value;
-
-                if (currentDate >= DateTime.Today)
-                {
-                    AnimationButton_Click(null, null);
-                    return;
-                }
-
-                currentDate = currentDate.AddDays(7);
-                if (currentDate > DateTime.Today)
-                {
-                    currentDate = DateTime.Today;
-                }
-
-                RankingDatePicker.SelectedDate = currentDate;
+                RankingView.ItemsSource = itemsSource;
+                RankingDatePicker.SelectedDate = _currentDate;
             });
-        }
 
-        private void RankingDatePicker_SelectedDateChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            var itemsSource = _provider
-                .GetRankingAsync(SelectedGame, RankingDatePicker.SelectedDate.Value)
-                .GetAwaiter()
-                .GetResult();
-
-            RankingView.ItemsSource = itemsSource
-                .Select((_ , r) => new ViewModel.RankingViewModel(_, r + 1))
-                .ToList();
+            _inProgress = false;
         }
 
         private void AnimationButton_Click(object sender, RoutedEventArgs e)

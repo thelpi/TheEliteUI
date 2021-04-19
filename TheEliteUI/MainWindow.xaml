@@ -6,15 +6,22 @@
         xmlns:local="clr-namespace:TheEliteUI"
         mc:Ignorable="d" Background="Gainsboro" WindowStartupLocation="CenterScreen"
         Title="MainWindow" Height="900" Width="1600">
-    <Window.Resources>
+    <!--<Window.Resources>
         <local:ColorConverter x:Key="ColorConverter" />
-    </Window.Resources>
+    </Window.Resources>-->
     <DockPanel>
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
             <DatePicker Name="RankingDatePicker" />
             <Button Margin="5, 0, 0, 0" Content="Start animation" Name="AnimationButton" Click="AnimationButton_Click" />
         </StackPanel>
-        <ListView Name="RankingView" Margin="0, 5, 0, 0" DockPanel.Dock="Bottom" Background="Black">
+        <ListBox DockPanel.Dock="Bottom" Margin="0, 5, 0, 0" Name="RankingView">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <local:PlayerRanking DataContext="{Binding}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <!--<ListView Name="RankingView" Margin="0, 5, 0, 0" DockPanel.Dock="Bottom" Background="Black">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Rank">
@@ -61,6 +68,6 @@
                     </GridViewColumn>
                 </GridView>
             </ListView.View>
-        </ListView>
+        </ListView>-->
     </DockPanel>
 </Window>
