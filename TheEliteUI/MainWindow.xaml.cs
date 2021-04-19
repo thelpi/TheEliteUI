@@ -72,15 +72,35 @@ namespace TheEliteUI
 
             Dispatcher.Invoke(() =>
             {
-                RankingView.Children.Clear();
-                foreach (var item in itemsSource)
-                {
-                    RankingView.Children.Add(new PlayerRanking(item));
-                }
+                itemsSource.ForEach(i => SearchRanking(i));
+                ClearRankings(itemsSource.Select(i => i.PlayerId));
                 RankingDatePicker.SelectedDate = _currentDate;
             });
 
             _inProgress = false;
+        }
+
+        private void SearchRanking(Ranking item)
+        {
+            var ranking = RankingView.Children.OfType<PlayerRanking>().FirstOrDefault(r => r.PlayerId == item.PlayerId);
+            if (ranking == null)
+            {
+                RankingView.Children.Add(new PlayerRanking(item));
+            }
+            else
+            {
+                ranking.Update(item);
+            }
+        }
+
+        private void ClearRankings(IEnumerable<long> okIds)
+        {
+            var removable = RankingView
+                .Children
+                .OfType<PlayerRanking>()
+                .Where(r => !okIds.Contains(r.PlayerId))
+                .ToList();
+            removable.ForEach(r => RankingView.Children.Remove(r));
         }
 
         private void AnimationButton_Click(object sender, RoutedEventArgs e)
