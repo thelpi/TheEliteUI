@@ -35,7 +35,6 @@ namespace TheEliteUI
             _provider = provider ?? throw new ArgumentNullException(nameof(provider));
             InitializeComponent();
             _currentDate = _rankingStart[SelectedGame];
-            //RankingDatePicker.SelectedDateChanged += RankingDatePicker_SelectedDateChanged;
             RankingDatePicker.SelectedDate = _currentDate;
             _timer = new Timer(TimerDelay);
             _timer.Elapsed += _timer_Elapsed;
@@ -89,6 +88,7 @@ namespace TheEliteUI
             }
             else
             {
+                _currentDate = RankingDatePicker.SelectedDate.Value;
                 _timer.Start();
                 AnimationButton.Content = "Stop Animation";
             }
