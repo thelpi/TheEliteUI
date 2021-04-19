@@ -13,7 +13,7 @@ namespace TheEliteUI
         private const string BaseUrl = "http://localhost:54460/";
         private const string RankingRoute = "games/{0}/rankings/{1}?page={2}&count={3}&full={4}";
         private const int DefaultPage = 0;
-        private const int DefaultLimit = 100;
+        private const int DefaultLimit = 25;
 
         private readonly HttpClient _client;
 

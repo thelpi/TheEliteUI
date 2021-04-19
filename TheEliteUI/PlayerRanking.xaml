@@ -12,14 +12,14 @@
         <localConverters:RankingToMedalConverter x:Key="rankingToMedalConverter" />
         <localConverters:ColorConverter x:Key="colorConverter" />
     </UserControl.Resources>
-    <Border BorderThickness="3" CornerRadius="3">
+    <Border BorderThickness="{Binding Source={x:Static local:PlayerRanking.ControlBorderThickness}}" CornerRadius="3">
         <Border.BorderBrush>
             <LinearGradientBrush StartPoint="0 0" EndPoint="1 1" >
                 <GradientStop Color="Navy" Offset="0" />
                 <GradientStop Color="Black" Offset="1" />
             </LinearGradientBrush>
         </Border.BorderBrush>
-        <StackPanel Background="Black" Height="30" Orientation="Horizontal">
+        <StackPanel Background="Black" Height="{Binding Source={x:Static local:PlayerRanking.ControlHeight}}" Orientation="Horizontal">
             <Canvas Background="Transparent" Width="25">
                 <Ellipse Canvas.Left="2.5" Canvas.Top="2.5" Width="25" Height="25">
                     <Ellipse.Fill>

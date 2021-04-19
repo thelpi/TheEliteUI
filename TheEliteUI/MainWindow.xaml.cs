@@ -12,7 +12,7 @@ namespace TheEliteUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        private const int TimerDelay = 200;
+        private const int TimerDelay = 1000;
         private const Game SelectedGame = Game.GoldenEye;
 
         private readonly IBackProvider _provider;
@@ -72,7 +72,11 @@ namespace TheEliteUI
 
             Dispatcher.Invoke(() =>
             {
-                RankingView.ItemsSource = itemsSource;
+                RankingView.Children.Clear();
+                foreach (var item in itemsSource)
+                {
+                    RankingView.Children.Add(new PlayerRanking(item));
+                }
                 RankingDatePicker.SelectedDate = _currentDate;
             });
 

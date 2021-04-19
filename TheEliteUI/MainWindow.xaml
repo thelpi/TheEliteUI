@@ -14,60 +14,6 @@
             <DatePicker Name="RankingDatePicker" />
             <Button Margin="5, 0, 0, 0" Content="Start animation" Name="AnimationButton" Click="AnimationButton_Click" />
         </StackPanel>
-        <ListBox DockPanel.Dock="Bottom" Margin="0, 5, 0, 0" Name="RankingView">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <local:PlayerRanking DataContext="{Binding}" />
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        <!--<ListView Name="RankingView" Margin="0, 5, 0, 0" DockPanel.Dock="Bottom" Background="Black">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Rank">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <Label Content="{Binding Path=Rank}" FontWeight="Bold" Foreground="{Binding Path=PlayerColor, Converter={StaticResource ColorConverter}}" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="Name">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <Label Content="{Binding Path=PlayerName}" FontWeight="Bold" Foreground="{Binding Path=PlayerColor, Converter={StaticResource ColorConverter}}" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="Points">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <Label Content="{Binding Path=Points}" Foreground="{Binding Path=PlayerColor, Converter={StaticResource ColorConverter}}" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="Time">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <Label Content="{Binding Path=CumuledTime}" Foreground="{Binding Path=PlayerColor, Converter={StaticResource ColorConverter}}" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="Untieds">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <Label Content="{Binding Path=UntiedRecordsCount}" Foreground="{Binding Path=PlayerColor, Converter={StaticResource ColorConverter}}" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="Tieds">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <Label Content="{Binding Path=RecordsCount}" Foreground="{Binding Path=PlayerColor, Converter={StaticResource ColorConverter}}" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>-->
+        <Canvas DockPanel.Dock="Bottom" Margin="0, 5, 0, 0" Name="RankingView" />
     </DockPanel>
 </Window>
