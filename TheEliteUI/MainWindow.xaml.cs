@@ -3,119 +3,166 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
 using System.Windows;
-using TheEliteUI.Model;
+using TheEliteUI.Models;
+using TheEliteUI.Providers;
 
 namespace TheEliteUI
 {
-    /// <summary>
-    /// Logique d'interaction pour MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
-        private const int TimerDelay = 1000;
+        private const int Steps = 50;
+        private const int DelayBeforeRanking = 500;
+        private const int TimerDelay = DelayBeforeRanking / Steps;
         private const Game SelectedGame = Game.GoldenEye;
+        private const int PaginationLimit = 25;
+        private const int DaysBetweenRanking = 100;
 
-        private readonly IBackProvider _provider;
+        private const string StartAnimationLabel = "Start Animation";
+        private const string StopAnimationLabel = "Stop Animation";
+
+        private readonly IRankingProvider _rankingProvider;
+        private readonly IClockProvider _clockProvider;
         private readonly Timer _timer;
+
         private bool _inProgress;
         private DateTime _currentDate;
-
-        private readonly IReadOnlyDictionary<Game, DateTime> _rankingStart = new Dictionary<Game, DateTime>
-        {
-            { Game.GoldenEye, new DateTime(1998, 07, 26) },
-            { Game.PerfectDark, new DateTime(2000, 01, 01) }
-        };
+        private int _step = 0;
 
         public MainWindow()
-            : this(new BackProvider())
+            : this(new RankingProvider(), new ClockProvider())
         { }
 
-        public MainWindow(IBackProvider provider)
+        public MainWindow(
+            IRankingProvider provider,
+            IClockProvider clockProvider)
         {
-            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
             InitializeComponent();
-            _currentDate = _rankingStart[SelectedGame];
-            RankingDatePicker.SelectedDate = _currentDate;
+
+            _rankingProvider = provider ?? throw new ArgumentNullException(nameof(provider));
+            _clockProvider = clockProvider ?? throw new ArgumentNullException(nameof(clockProvider));
+
+            _currentDate = Ranking.RankingStart[SelectedGame];
             _timer = new Timer(TimerDelay);
             _timer.Elapsed += _timer_Elapsed;
+
+            AnimationButton.Content = StartAnimationLabel;
+            RankingDatePicker.SelectedDate = _currentDate;
         }
 
         private void _timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             if (_inProgress)
             {
-                System.Diagnostics.Debug.WriteLine("Reentrance");
+                // avoid multiple time executions
                 return;
             }
 
             _inProgress = true;
-
-            if (_currentDate >= DateTime.Today)
+            
+            if (_currentDate >= _clockProvider.Today)
             {
-                Dispatcher.Invoke(() => AnimationButton_Click(null, null));
-                _inProgress = false;
-                return;
-            }
-
-            _currentDate = _currentDate.AddDays(7);
-            if (_currentDate > DateTime.Today)
-            {
-                _currentDate = DateTime.Today;
-            }
-
-            var itemsSource = _provider
-                .GetRankingAsync(SelectedGame, _currentDate)
-                .GetAwaiter()
-                .GetResult()
-                .Select((r, i) => r.WithRank(i + 1))
-                .ToList();
-
-            Dispatcher.Invoke(() =>
-            {
-                itemsSource.ForEach(i => SearchRanking(i));
-                ClearRankings(itemsSource.Select(i => i.PlayerId));
-                RankingDatePicker.SelectedDate = _currentDate;
-            });
-
-            _inProgress = false;
-        }
-
-        private void SearchRanking(Ranking item)
-        {
-            var ranking = RankingView.Children.OfType<PlayerRanking>().FirstOrDefault(r => r.PlayerId == item.PlayerId);
-            if (ranking == null)
-            {
-                RankingView.Children.Add(new PlayerRanking(item));
+                // stop animation after current date
+                Dispatcher.Invoke(StopAnimation);
             }
             else
             {
-                ranking.Update(item);
+                if (_step == 0)
+                {
+                    // if the next date is past today, we force today
+                    _currentDate = _currentDate.AddDays(DaysBetweenRanking);
+                    if (_currentDate > _clockProvider.Today)
+                    {
+                        _currentDate = _clockProvider.Today;
+                    }
+
+                    var rankingItems = _rankingProvider.GetRanking(SelectedGame, _currentDate, 0, PaginationLimit);
+
+                    Dispatcher.Invoke(() =>
+                    {
+                        SetRankingViewItems(rankingItems);
+                        RankingDatePicker.SelectedDate = _currentDate;
+                    }, System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+                }
+
+                Dispatcher.Invoke(() =>
+                {
+                    RefreshPlayersTopPosition();
+                }, System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+
+                _step++;
+                _step = _step == Steps ? 0 : _step;
+            }
+            
+            _inProgress = false;
+        }
+
+        private void SetRankingViewItems(IReadOnlyCollection<Ranking> rankingItems)
+        {
+            foreach (var item in rankingItems)
+            {
+                AddOrUpdatePlayerRanking(item);
+            }
+            ClearObsoletePlayersFromRankinkView(rankingItems.Select(i => i.PlayerId));
+        }
+
+        private void AddOrUpdatePlayerRanking(Ranking item)
+        {
+            var ranking = GetPlayerRankings()
+                .SingleOrDefault(r => r.PlayerId == item.PlayerId);
+            if (ranking == null)
+            {
+                var rk = new PlayerRanking(item, Steps, PaginationLimit);
+                RankingView.Children.Add(rk);
+            }
+            else
+            {
+                ranking.Update(item, PaginationLimit);
             }
         }
 
-        private void ClearRankings(IEnumerable<long> okIds)
+        private void ClearObsoletePlayersFromRankinkView(IEnumerable<long> playerIdsToKeep)
         {
-            var removable = RankingView
-                .Children
-                .OfType<PlayerRanking>()
-                .Where(r => !okIds.Contains(r.PlayerId))
-                .ToList();
-            removable.ForEach(r => RankingView.Children.Remove(r));
+            GetPlayerRankings()
+                .Where(r => !playerIdsToKeep.Contains(r.PlayerId))
+                .ToList()
+                .ForEach(r => RankingView.Children.Remove(r));
+        }
+
+        private void RefreshPlayersTopPosition()
+        {
+            GetPlayerRankings()
+                .ToList()
+                .ForEach(r => r.SetActualTop());
         }
 
         private void AnimationButton_Click(object sender, RoutedEventArgs e)
         {
             if (_timer.Enabled)
             {
-                _timer.Stop();
-                AnimationButton.Content = "Start Animation";
+                StopAnimation();
             }
             else
             {
-                _currentDate = RankingDatePicker.SelectedDate.Value;
-                _timer.Start();
-                AnimationButton.Content = "Stop Animation";
+                StartAnimation();
             }
+        }
+
+        private void StartAnimation()
+        {
+            _currentDate = RankingDatePicker.SelectedDate.Value;
+            _timer.Start();
+            AnimationButton.Content = StopAnimationLabel;
+        }
+
+        private void StopAnimation()
+        {
+            _timer.Stop();
+            AnimationButton.Content = StartAnimationLabel;
+        }
+
+        private IEnumerable<PlayerRanking> GetPlayerRankings()
+        {
+            return RankingView.Children.OfType<PlayerRanking>();
         }
     }
 }

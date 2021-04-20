@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using System.Windows.Media;
 
 namespace TheEliteUI.Converters
 {
-    public class ColorConverter : IValueConverter
+    public class RankToTextConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (SolidColorBrush)(new BrushConverter().ConvertFrom($"#{value}"));
+            return value.ToString().PadLeft(2, '0');
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

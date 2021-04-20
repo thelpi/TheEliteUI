@@ -3,16 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TheEliteUI"
         mc:Ignorable="d" Background="Gainsboro" WindowStartupLocation="CenterScreen"
         Title="MainWindow" Height="900" Width="1600">
-    <!--<Window.Resources>
-        <local:ColorConverter x:Key="ColorConverter" />
-    </Window.Resources>-->
     <DockPanel>
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
             <DatePicker Name="RankingDatePicker" />
-            <Button Margin="5, 0, 0, 0" Content="Start animation" Name="AnimationButton" Click="AnimationButton_Click" />
+            <Button Margin="5, 0, 0, 0" Name="AnimationButton" Click="AnimationButton_Click" />
         </StackPanel>
         <Canvas DockPanel.Dock="Bottom" Margin="0, 5, 0, 0" Name="RankingView" />
     </DockPanel>

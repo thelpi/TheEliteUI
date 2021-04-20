@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using TheEliteUI.Model;
+using TheEliteUI.Models;
 
 namespace TheEliteUI.Converters
 {
@@ -9,6 +9,7 @@ namespace TheEliteUI.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            // TODO: remove reference to model property
             return 150 + ((System.Convert.ToInt32(value) * 300) / (double)Ranking.MaxPoints);
         }
 

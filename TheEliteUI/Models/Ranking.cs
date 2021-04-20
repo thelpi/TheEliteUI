@@ -1,8 +1,17 @@
-﻿namespace TheEliteUI.Model
+﻿using System;
+using System.Collections.Generic;
+
+namespace TheEliteUI.Models
 {
     public class Ranking
     {
         public const int MaxPoints = 6000;
+
+        public static readonly IReadOnlyDictionary<Game, DateTime> RankingStart = new Dictionary<Game, DateTime>
+        {
+            { Game.GoldenEye, new DateTime(1998, 07, 26) },
+            { Game.PerfectDark, new DateTime(2000, 01, 01) }
+        };
 
         public Game Game { get; set; }
         public long PlayerId { get; set; }

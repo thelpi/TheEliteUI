@@ -56,9 +56,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Providers\ClockProvider.cs" />
     <Compile Include="Converters\PointsToWidthConverter.cs" />
-    <Compile Include="Converters\RankingTextConverter.cs" />
-    <Compile Include="Converters\RankingToMedalConverter.cs" />
+    <Compile Include="Converters\RankToTextConverter.cs" />
+    <Compile Include="Providers\IClockProvider.cs" />
     <Compile Include="PlayerRanking.xaml.cs">
       <DependentUpon>PlayerRanking.xaml</DependentUpon>
     </Compile>
@@ -70,9 +71,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BackProvider.cs" />
-    <Compile Include="Converters\ColorConverter.cs" />
-    <Compile Include="IBackProvider.cs" />
+    <Compile Include="Providers\RankingProvider.cs" />
+    <Compile Include="Converters\HexaToColorConverter.cs" />
+    <Compile Include="Providers\IRankingProvider.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -83,8 +84,8 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\Game.cs" />
-    <Compile Include="Model\Ranking.cs" />
+    <Compile Include="Models\Game.cs" />
+    <Compile Include="Models\Ranking.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
