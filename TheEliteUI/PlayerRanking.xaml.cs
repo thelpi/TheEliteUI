@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.Windows.Controls;
 using TheEliteUI.Models;
 
 namespace TheEliteUI
@@ -25,10 +26,13 @@ namespace TheEliteUI
         private double _sourceWidthPx;
         private double _stepWidthPx;
 
-        private int _targetPoints;
-        private int _sourcePoints;
+        private double _targetPoints;
+        private double _sourcePoints;
         private double _stepPoints;
-        private int _currentPoints;
+
+        private double _targetRank;
+        private double _sourceRank;
+        private double _stepRank;
 
         public PlayerRanking(Ranking item, int steps)
         {
@@ -36,40 +40,45 @@ namespace TheEliteUI
             PlayerId = item.PlayerId;
             DataContext = item;
             StepsCount = steps;
-            SetTheoricalWidthAndTop(item, true);
-            SetInitialActualWidthAndTop();
+            SetTheoricalValues(item, true);
+            SetInitialValues();
         }
 
         internal void Update(Ranking item)
         {
             DataContext = item;
-            SetTheoricalWidthAndTop(item, false);
+            SetTheoricalValues(item, false);
         }
 
-        internal void SetActualWidthAndTop()
+        internal void SetActualValues()
         {
-            var currentTop = (double)GetValue(Canvas.TopProperty);
-            var newTop = currentTop + _stepTopPx;
-            SetValue(Canvas.TopProperty, newTop);
-            
-            MainCanvas.Width = MainCanvas.Width + _stepWidthPx;
-            MainPanel.Width = MainPanel.Width + _stepWidthPx;
-
-            _currentPoints = System.Convert.ToInt32(_currentPoints + _stepPoints);
-            PointsLabel.Content = _currentPoints;
-        }
-
-        private void SetInitialActualWidthAndTop()
-        {
+            _sourceTopPx += _stepTopPx;
             SetValue(Canvas.TopProperty, _sourceTopPx);
 
+            _sourceWidthPx += _stepWidthPx;
             MainCanvas.Width = _sourceWidthPx;
-            MainPanel.Width = _sourceWidthPx;
 
-            PointsLabel.Content = _sourcePoints;
+            _sourcePoints += _stepPoints;
+            PointsLabel.Content = Convert.ToInt32(_sourcePoints);
+            
+            _sourceRank += _stepRank;
+            RankLabel.Content = SetRankLabel(Convert.ToInt32(_sourceRank));
         }
 
-        private void SetTheoricalWidthAndTop(Ranking item, bool isNew)
+        private void SetInitialValues()
+        {
+            SetValue(Canvas.TopProperty, _sourceTopPx);
+            MainCanvas.Width = _sourceWidthPx;
+            PointsLabel.Content = _sourcePoints;
+            RankLabel.Content = SetRankLabel(Convert.ToInt32(_sourceRank));
+        }
+
+        private string SetRankLabel(int rank)
+        {
+            return rank.ToString().PadLeft(2, '0');
+        }
+
+        private void SetTheoricalValues(Ranking item, bool isNew)
         {
             // start position on y axis:
             // for a new item, it's at the bottom (so after every items of the window)
@@ -83,7 +92,6 @@ namespace TheEliteUI
             // The same kind of stuff for the width
             // except the initial width is zero
             _sourceWidthPx = isNew ? 0 : _targetWidthPx;
-
             // the scale of width starts to "Ranking.MinPoints" and ends at "Ranking.MaxPoints"
             // with a scale of "PixelsByPoint"
             // if real points are below "Ranking.MinPoints", we use this value (minus "PointsMargin")
@@ -94,15 +102,51 @@ namespace TheEliteUI
                 ? item.Points - (Ranking.MinPoints - PointsMargin)
                 : PointsMargin;
             _targetWidthPx = PlayerNamePixels + ((pointsToConsider * PixelsByPoint) / Ranking.MaxPoints);
-
             _stepWidthPx = (_targetWidthPx - _sourceWidthPx) / StepsCount;
 
             // same stuff for points display management
-            // but we also stores the current point value, to avoid getting it from the label content
             _sourcePoints = isNew ? 0 : _targetPoints;
-            _currentPoints = _sourcePoints;
             _targetPoints = item.Points;
             _stepPoints = (_targetPoints - _sourcePoints) / StepsCount;
+
+            // same stuff for rank
+            _sourceRank = isNew ? (Ranking.DefaultPaginationLimit + 1) : _targetRank;
+            _targetRank = item.Rank;
+            _stepRank = (_targetRank - _sourceRank) / StepsCount;
+        }
+
+        private class SourceToTargetByStep
+        {
+            private double _current;
+            private double _target;
+            private double _step;
+            private readonly int _stepsCount;
+
+            public SourceToTargetByStep(double targetValue, int stepsCount, double currentValue)
+            {
+                _stepsCount = stepsCount;
+                _current = currentValue;
+                _target = targetValue;
+                SetStep();
+            }
+
+            public void SetNewTarget(double targetValue)
+            {
+                _current = _target;
+                _target = targetValue;
+                SetStep();
+            }
+
+            private void SetStep()
+            {
+                _step = (_target - _current) / _stepsCount;
+            }
+
+            public double SetCurrentStep()
+            {
+                _current += _step;
+                return _current;
+            }
         }
     }
 }

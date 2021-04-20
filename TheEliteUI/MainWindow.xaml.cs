@@ -10,11 +10,11 @@ namespace TheEliteUI
 {
     public partial class MainWindow : Window
     {
-        private const int Steps = 50;
-        private const int DelayBeforeRanking = 500;
+        private const int Steps = 100;
+        private const int DelayBeforeRanking = 1000;
         private const int TimerDelay = DelayBeforeRanking / Steps;
         private const Game SelectedGame = Game.GoldenEye;
-        private const int DaysBetweenRanking = 100;
+        private const int DaysBetweenRanking = 200;
 
         private const string StartAnimationLabel = "Start Animation";
         private const string StopAnimationLabel = "Stop Animation";
@@ -141,7 +141,7 @@ namespace TheEliteUI
         {
             GetPlayerRankings()
                 .ToList()
-                .ForEach(r => r.SetActualWidthAndTop());
+                .ForEach(r => r.SetActualValues());
         }
 
         private void AnimationButton_Click(object sender, RoutedEventArgs e)
