@@ -16,7 +16,7 @@ namespace TheEliteUI
         private readonly int StepsCount;
 
         public long PlayerId { get; }
-
+        
         private double _targetTopPx;
         private double _sourceTopPx;
         private double _stepTopPx;
@@ -24,6 +24,11 @@ namespace TheEliteUI
         private double _targetWidthPx;
         private double _sourceWidthPx;
         private double _stepWidthPx;
+
+        private int _targetPoints;
+        private int _sourcePoints;
+        private double _stepPoints;
+        private int _currentPoints;
 
         public PlayerRanking(Ranking item, int steps)
         {
@@ -49,6 +54,9 @@ namespace TheEliteUI
             
             MainCanvas.Width = MainCanvas.Width + _stepWidthPx;
             MainPanel.Width = MainPanel.Width + _stepWidthPx;
+
+            _currentPoints = System.Convert.ToInt32(_currentPoints + _stepPoints);
+            PointsLabel.Content = _currentPoints;
         }
 
         private void SetInitialActualWidthAndTop()
@@ -57,6 +65,8 @@ namespace TheEliteUI
 
             MainCanvas.Width = _sourceWidthPx;
             MainPanel.Width = _sourceWidthPx;
+
+            PointsLabel.Content = _sourcePoints;
         }
 
         private void SetTheoricalWidthAndTop(Ranking item, bool isNew)
@@ -74,12 +84,25 @@ namespace TheEliteUI
             // except the initial width is zero
             _sourceWidthPx = isNew ? 0 : _targetWidthPx;
 
+            // the scale of width starts to "Ranking.MinPoints" and ends at "Ranking.MaxPoints"
+            // with a scale of "PixelsByPoint"
+            // if real points are below "Ranking.MinPoints", we use this value (minus "PointsMargin")
+            // we also add "PlayerNamePixels" to display player's name
+            // TODO: not great because "PointsMargin" should not be impacted by "PixelsByPoint"
+            // it should be raw pixels (at the very least, the name is confusing)
             var pointsToConsider = item.Points > Ranking.MinPoints
                 ? item.Points - (Ranking.MinPoints - PointsMargin)
                 : PointsMargin;
-
             _targetWidthPx = PlayerNamePixels + ((pointsToConsider * PixelsByPoint) / Ranking.MaxPoints);
+
             _stepWidthPx = (_targetWidthPx - _sourceWidthPx) / StepsCount;
+
+            // same stuff for points display management
+            // but we also stores the current point value, to avoid getting it from the label content
+            _sourcePoints = isNew ? 0 : _targetPoints;
+            _currentPoints = _sourcePoints;
+            _targetPoints = item.Points;
+            _stepPoints = (_targetPoints - _sourcePoints) / StepsCount;
         }
     }
 }

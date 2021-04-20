@@ -31,7 +31,7 @@
                             <GradientStop Color="OrangeRed" Offset="0.99" />
                         </LinearGradientBrush>
                     </DockPanel.Background>
-                    <Label Background="Transparent" Foreground="Black" Content="{Binding Path=Points, FallbackValue=4000}" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="12" />
+                    <Label Background="Transparent" Foreground="Black" Name="PointsLabel" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="12" />
                 </DockPanel>
             </Canvas>
         </StackPanel>
