@@ -125,7 +125,7 @@ namespace TheEliteUI
             }
             else
             {
-                ranking.Update(item);
+                ranking.UpdateItemtarget(item);
             }
         }
 
@@ -141,7 +141,7 @@ namespace TheEliteUI
         {
             GetPlayerRankings()
                 .ToList()
-                .ForEach(r => r.SetActualValues());
+                .ForEach(r => r.ArrangeControl());
         }
 
         private void AnimationButton_Click(object sender, RoutedEventArgs e)

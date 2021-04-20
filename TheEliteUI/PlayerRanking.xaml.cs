@@ -14,105 +14,61 @@ namespace TheEliteUI
         private const double PixelsByPoint = 800;
         private const double PointsMargin = 100;
 
-        private readonly int StepsCount;
-
         public long PlayerId { get; }
-        
-        private double _targetTopPx;
-        private double _sourceTopPx;
-        private double _stepTopPx;
 
-        private double _targetWidthPx;
-        private double _sourceWidthPx;
-        private double _stepWidthPx;
-
-        private double _targetPoints;
-        private double _sourcePoints;
-        private double _stepPoints;
-
-        private double _targetRank;
-        private double _sourceRank;
-        private double _stepRank;
+        private readonly SourceToTargetByStep _top;
+        private readonly SourceToTargetByStep _width;
+        private readonly SourceToTargetByStep _points;
+        private readonly SourceToTargetByStep _rank;
 
         public PlayerRanking(Ranking item, int steps)
         {
             InitializeComponent();
             PlayerId = item.PlayerId;
             DataContext = item;
-            StepsCount = steps;
-            SetTheoricalValues(item, true);
-            SetInitialValues();
+            
+            _top = new SourceToTargetByStep(GetTargetTop(item), steps, Ranking.DefaultPaginationLimit * Realheight);
+            _width = new SourceToTargetByStep(GetTargetWidth(item), steps, 0);
+            _points = new SourceToTargetByStep(item.Points, steps, 0);
+            _rank = new SourceToTargetByStep(item.Rank, steps, Ranking.DefaultPaginationLimit + 1);
+
+            ArrangeControl(false);
         }
 
-        internal void Update(Ranking item)
+        internal void UpdateItemtarget(Ranking item)
         {
             DataContext = item;
-            SetTheoricalValues(item, false);
+            _top.SetNewTarget(GetTargetTop(item));
+            _width.SetNewTarget(GetTargetWidth(item));
+            _points.SetNewTarget(item.Points);
+            _rank.SetNewTarget(item.Rank);
         }
 
-        internal void SetActualValues()
+        internal void ArrangeControl()
         {
-            _sourceTopPx += _stepTopPx;
-            SetValue(Canvas.TopProperty, _sourceTopPx);
-
-            _sourceWidthPx += _stepWidthPx;
-            MainCanvas.Width = _sourceWidthPx;
-
-            _sourcePoints += _stepPoints;
-            PointsLabel.Content = Convert.ToInt32(_sourcePoints);
-            
-            _sourceRank += _stepRank;
-            RankLabel.Content = SetRankLabel(Convert.ToInt32(_sourceRank));
+            ArrangeControl(true);
         }
 
-        private void SetInitialValues()
+        private void ArrangeControl(bool step)
         {
-            SetValue(Canvas.TopProperty, _sourceTopPx);
-            MainCanvas.Width = _sourceWidthPx;
-            PointsLabel.Content = _sourcePoints;
-            RankLabel.Content = SetRankLabel(Convert.ToInt32(_sourceRank));
+            SetValue(Canvas.TopProperty, _top.SetCurrentStep(step));
+            MainCanvas.Width = _width.SetCurrentStep(step);
+            PointsLabel.Content = Convert.ToInt32(_points.SetCurrentStep(step));
+            RankLabel.Content = Convert.ToInt32(_rank.SetCurrentStep(step)).ToString().PadLeft(2, '0');
         }
 
-        private string SetRankLabel(int rank)
+        private static double GetTargetTop(Ranking item)
         {
-            return rank.ToString().PadLeft(2, '0');
+            return (item.Rank - 1) * Realheight;
         }
 
-        private void SetTheoricalValues(Ranking item, bool isNew)
+        private static double GetTargetWidth(Ranking item)
         {
-            // start position on y axis:
-            // for a new item, it's at the bottom (so after every items of the window)
-            // for an existing item, it's the current position
-            _sourceTopPx = isNew ? Ranking.DefaultPaginationLimit * Realheight : _targetTopPx;
-            // position target on y axis
-            _targetTopPx = (item.Rank - 1) * Realheight;
-            // pixels to move, from source to target, at each step
-            _stepTopPx = (_targetTopPx - _sourceTopPx) / StepsCount;
-
-            // The same kind of stuff for the width
-            // except the initial width is zero
-            _sourceWidthPx = isNew ? 0 : _targetWidthPx;
-            // the scale of width starts to "Ranking.MinPoints" and ends at "Ranking.MaxPoints"
-            // with a scale of "PixelsByPoint"
-            // if real points are below "Ranking.MinPoints", we use this value (minus "PointsMargin")
-            // we also add "PlayerNamePixels" to display player's name
-            // TODO: not great because "PointsMargin" should not be impacted by "PixelsByPoint"
-            // it should be raw pixels (at the very least, the name is confusing)
+            // TODO: "PointsMargin" should be in pixels unit
             var pointsToConsider = item.Points > Ranking.MinPoints
                 ? item.Points - (Ranking.MinPoints - PointsMargin)
                 : PointsMargin;
-            _targetWidthPx = PlayerNamePixels + ((pointsToConsider * PixelsByPoint) / Ranking.MaxPoints);
-            _stepWidthPx = (_targetWidthPx - _sourceWidthPx) / StepsCount;
-
-            // same stuff for points display management
-            _sourcePoints = isNew ? 0 : _targetPoints;
-            _targetPoints = item.Points;
-            _stepPoints = (_targetPoints - _sourcePoints) / StepsCount;
-
-            // same stuff for rank
-            _sourceRank = isNew ? (Ranking.DefaultPaginationLimit + 1) : _targetRank;
-            _targetRank = item.Rank;
-            _stepRank = (_targetRank - _sourceRank) / StepsCount;
+            return PlayerNamePixels + ((pointsToConsider * PixelsByPoint) / Ranking.MaxPoints);
         }
 
         private class SourceToTargetByStep
@@ -142,9 +98,12 @@ namespace TheEliteUI
                 _step = (_target - _current) / _stepsCount;
             }
 
-            public double SetCurrentStep()
+            public double SetCurrentStep(bool step)
             {
-                _current += _step;
+                if (step)
+                {
+                    _current += _step;
+                }
                 return _current;
             }
         }
