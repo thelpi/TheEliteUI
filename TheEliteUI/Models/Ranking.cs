@@ -6,6 +6,9 @@ namespace TheEliteUI.Models
     public class Ranking
     {
         public const int MaxPoints = 6000;
+        public const int DefaultPaginationLimit = 25;
+        // note: this value is connected to pagination
+        public const int MinPoints = 4000;
 
         public static readonly IReadOnlyDictionary<Game, DateTime> RankingStart = new Dictionary<Game, DateTime>
         {

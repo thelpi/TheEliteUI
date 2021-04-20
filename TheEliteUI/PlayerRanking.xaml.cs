@@ -9,6 +9,10 @@ namespace TheEliteUI
         public static double ControlBorderThickness { get; } = 3;
         public static double Realheight => ControlHeight + (2 * ControlBorderThickness);
 
+        private const double PlayerNamePixels = 150;
+        private const double PixelsByPoint = 800;
+        private const double PointsMargin = 100;
+
         private readonly int StepsCount;
 
         public long PlayerId { get; }
@@ -21,20 +25,20 @@ namespace TheEliteUI
         private double _sourceWidthPx;
         private double _stepWidthPx;
 
-        public PlayerRanking(Ranking item, int steps, int itemsCount)
+        public PlayerRanking(Ranking item, int steps)
         {
             InitializeComponent();
             PlayerId = item.PlayerId;
             DataContext = item;
             StepsCount = steps;
-            SetTheoricalWidthAndTop(item, true, itemsCount);
+            SetTheoricalWidthAndTop(item, true);
             SetInitialActualWidthAndTop();
         }
 
-        internal void Update(Ranking item, int itemsCount)
+        internal void Update(Ranking item)
         {
             DataContext = item;
-            SetTheoricalWidthAndTop(item, false, itemsCount);
+            SetTheoricalWidthAndTop(item, false);
         }
 
         internal void SetActualWidthAndTop()
@@ -55,12 +59,12 @@ namespace TheEliteUI
             MainPanel.Width = _sourceWidthPx;
         }
 
-        private void SetTheoricalWidthAndTop(Ranking item, bool isNew, int itemsCount)
+        private void SetTheoricalWidthAndTop(Ranking item, bool isNew)
         {
             // start position on y axis:
             // for a new item, it's at the bottom (so after every items of the window)
             // for an existing item, it's the current position
-            _sourceTopPx = isNew ? itemsCount * Realheight : _targetTopPx;
+            _sourceTopPx = isNew ? Ranking.DefaultPaginationLimit * Realheight : _targetTopPx;
             // position target on y axis
             _targetTopPx = (item.Rank - 1) * Realheight;
             // pixels to move, from source to target, at each step
@@ -69,8 +73,12 @@ namespace TheEliteUI
             // The same kind of stuff for the width
             // except the initial width is zero
             _sourceWidthPx = isNew ? 0 : _targetWidthPx;
-            // TODO: explain formula
-            _targetWidthPx = 150 + ((item.Points * 300) / (double)Ranking.MaxPoints);
+
+            var pointsToConsider = item.Points > Ranking.MinPoints
+                ? item.Points - (Ranking.MinPoints - PointsMargin)
+                : PointsMargin;
+
+            _targetWidthPx = PlayerNamePixels + ((pointsToConsider * PixelsByPoint) / Ranking.MaxPoints);
             _stepWidthPx = (_targetWidthPx - _sourceWidthPx) / StepsCount;
         }
     }

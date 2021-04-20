@@ -14,7 +14,6 @@ namespace TheEliteUI
         private const int DelayBeforeRanking = 500;
         private const int TimerDelay = DelayBeforeRanking / Steps;
         private const Game SelectedGame = Game.GoldenEye;
-        private const int PaginationLimit = 25;
         private const int DaysBetweenRanking = 100;
 
         private const string StartAnimationLabel = "Start Animation";
@@ -75,19 +74,29 @@ namespace TheEliteUI
                         _currentDate = _clockProvider.Today;
                     }
 
-                    var rankingItems = _rankingProvider.GetRanking(SelectedGame, _currentDate, 0, PaginationLimit);
-
-                    Dispatcher.Invoke(() =>
+                    var rankingItems = _rankingProvider.GetRanking(SelectedGame, _currentDate, 0, Ranking.DefaultPaginationLimit);
+                    
+                    // can fail on window closing
+                    try
                     {
-                        SetRankingViewItems(rankingItems);
-                        RankingDatePicker.SelectedDate = _currentDate;
-                    }, System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+                        Dispatcher.Invoke(() =>
+                        {
+                            SetRankingViewItems(rankingItems);
+                            RankingDatePicker.SelectedDate = _currentDate;
+                        });
+                    }
+                    catch { }
                 }
 
-                Dispatcher.Invoke(() =>
+                // can fail on window closing
+                try
                 {
-                    RefreshPlayersTopPosition();
-                }, System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+                    Dispatcher.Invoke(() =>
+                    {
+                        RefreshPlayersTopPosition();
+                    });
+                }
+                catch { }
 
                 _step++;
                 _step = _step == Steps ? 0 : _step;
@@ -111,12 +120,12 @@ namespace TheEliteUI
                 .SingleOrDefault(r => r.PlayerId == item.PlayerId);
             if (ranking == null)
             {
-                var rk = new PlayerRanking(item, Steps, PaginationLimit);
+                var rk = new PlayerRanking(item, Steps);
                 RankingView.Children.Add(rk);
             }
             else
             {
-                ranking.Update(item, PaginationLimit);
+                ranking.Update(item);
             }
         }
 
