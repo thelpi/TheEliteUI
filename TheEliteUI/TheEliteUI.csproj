@@ -57,7 +57,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Providers\ClockProvider.cs" />
-    <Compile Include="Converters\PointsToWidthConverter.cs" />
     <Compile Include="Converters\RankToTextConverter.cs" />
     <Compile Include="Providers\IClockProvider.cs" />
     <Compile Include="PlayerRanking.xaml.cs">

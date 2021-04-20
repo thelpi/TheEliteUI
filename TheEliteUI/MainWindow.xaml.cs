@@ -132,7 +132,7 @@ namespace TheEliteUI
         {
             GetPlayerRankings()
                 .ToList()
-                .ForEach(r => r.SetActualTop());
+                .ForEach(r => r.SetActualWidthAndTop());
         }
 
         private void AnimationButton_Click(object sender, RoutedEventArgs e)
