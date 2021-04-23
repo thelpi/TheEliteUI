@@ -4,7 +4,7 @@ using TheEliteUI.ViewModels;
 
 namespace TheEliteUI
 {
-    public abstract class RankingControl : UserControl
+    public class RankingControl : UserControl
     {
         public static double ControlHeight { get; } = 30;
         public static double ControlBorderThickness { get; } = 3;
@@ -21,11 +21,17 @@ namespace TheEliteUI
         private readonly SourceToTargetByStep _points;
         private readonly SourceToTargetByStep _rank;
 
-        public abstract Canvas MainCanvas { get; protected set; }
-        public abstract Label ValueLabel { get; protected set; }
-        public abstract Label RankLabel { get; protected set; }
+        public virtual Panel MainPanel { get; protected set; }
+        public virtual Label ValueLabel { get; protected set; }
+        public virtual Label RankLabel { get; protected set; }
+        protected virtual Func<double, object> ValueParser { get; set; }
 
-        protected RankingControl(IRanking item, int steps, double min, double max, int items)
+        public RankingControl()
+        {
+
+        }
+
+        public RankingControl(IRanking item, int steps, double min, double max, int items)
         {
             Item = item;
             DataContext = item;
@@ -34,8 +40,7 @@ namespace TheEliteUI
             _width = new SourceToTargetByStep(GetTargetWidth(item, min, max), steps, 0);
             _points = new SourceToTargetByStep(item.Value, steps, 0);
             _rank = new SourceToTargetByStep(item.Rank, steps, items + 1);
-
-            ArrangeControl(false);
+            ValueParser = v => v;
         }
 
         internal void UpdateItemtarget(IRanking item, double min, double max)
@@ -52,11 +57,11 @@ namespace TheEliteUI
             ArrangeControl(true);
         }
 
-        private void ArrangeControl(bool step)
+        protected void ArrangeControl(bool step)
         {
             SetValue(Canvas.TopProperty, _top.SetCurrentStep(step));
-            MainCanvas.Width = _width.SetCurrentStep(step);
-            ValueLabel.Content = _points.SetCurrentStep(step); // TODO: int ?
+            MainPanel.Width = _width.SetCurrentStep(step);
+            ValueLabel.Content = ValueParser(_points.SetCurrentStep(step));
             RankLabel.Content = Convert.ToInt32(_rank.SetCurrentStep(step)).ToString().PadLeft(2, '0');
         }
 

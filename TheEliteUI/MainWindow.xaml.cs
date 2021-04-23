@@ -118,7 +118,7 @@ namespace TheEliteUI
         private void AddOrUpdatePlayerRanking(PlayerRanking item)
         {
             var ranking = GetPlayerRankings()
-                .SingleOrDefault(r => r.Player.IsKey(item.Key));
+                .SingleOrDefault(r => r.Item.IsKey(item.Key));
             if (ranking == null)
             {
                 var rk = new PlayerRankingControl(item, Steps);
@@ -126,14 +126,15 @@ namespace TheEliteUI
             }
             else
             {
-                ranking.UpdateItemtarget(item);
+                // TODO: set once
+                ranking.UpdateItemtarget(item, PlayerRankingDto.MinPoints, PlayerRankingDto.MaxPoints);
             }
         }
 
         private void ClearObsoletePlayersFromRankinkView(IEnumerable<PlayerRanking> playersToKeep)
         {
             GetPlayerRankings()
-                .Where(r => !playersToKeep.Any(_ => _.IsKey(r.Player.Key)))
+                .Where(r => !playersToKeep.Any(_ => _.IsKey(r.Item.Key)))
                 .ToList()
                 .ForEach(r => RankingView.Children.Remove(r));
         }
