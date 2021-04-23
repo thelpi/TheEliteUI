@@ -56,14 +56,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Dtos\StandingWrDto.cs" />
+    <Compile Include="Level.cs" />
     <Compile Include="Providers\ClockProvider.cs" />
     <Compile Include="Providers\IClockProvider.cs" />
     <Compile Include="PlayerRankingControl.xaml.cs">
       <DependentUpon>PlayerRankingControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="RankingControl.cs" />
+    <Compile Include="Stage.cs" />
     <Compile Include="ViewModels\IRanking.cs" />
     <Compile Include="ViewModels\PlayerRanking.cs" />
+    <Compile Include="ViewModels\WrRanking.cs" />
+    <Compile Include="WrRankingControl.xaml.cs">
+      <DependentUpon>WrRankingControl.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -72,14 +79,18 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Providers\RankingProvider.cs" />
+    <Compile Include="Providers\EliteProvider.cs" />
     <Compile Include="Converters\HexaToColorConverter.cs" />
-    <Compile Include="Providers\IRankingProvider.cs" />
+    <Compile Include="Providers\IEliteProvider.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Page Include="PlayerRankingControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WrRankingControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

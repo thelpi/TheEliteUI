@@ -7,7 +7,7 @@ using TheEliteUI.Dtos;
 
 namespace TheEliteUI.Providers
 {
-    class RankingProvider : IRankingProvider
+    class EliteProvider : IEliteProvider
     {
         private const int TimeoutSec = 10;
         private const string BaseUrl = "http://localhost:54460/";
@@ -16,7 +16,7 @@ namespace TheEliteUI.Providers
 
         private readonly HttpClient _client;
 
-        public RankingProvider()
+        public EliteProvider()
         {
             _client = new HttpClient
             {

@@ -20,7 +20,7 @@ namespace TheEliteUI
         private const string StartAnimationLabel = "Start Animation";
         private const string StopAnimationLabel = "Stop Animation";
 
-        private readonly IRankingProvider _rankingProvider;
+        private readonly IEliteProvider _eliteProvider;
         private readonly IClockProvider _clockProvider;
         private readonly Timer _timer;
 
@@ -29,16 +29,16 @@ namespace TheEliteUI
         private int _step = 0;
 
         public MainWindow()
-            : this(new RankingProvider(), new ClockProvider())
+            : this(new EliteProvider(), new ClockProvider())
         { }
 
         public MainWindow(
-            IRankingProvider provider,
+            IEliteProvider provider,
             IClockProvider clockProvider)
         {
             InitializeComponent();
 
-            _rankingProvider = provider ?? throw new ArgumentNullException(nameof(provider));
+            _eliteProvider = provider ?? throw new ArgumentNullException(nameof(provider));
             _clockProvider = clockProvider ?? throw new ArgumentNullException(nameof(clockProvider));
 
             _currentDate = PlayerRankingDto.RankingStart[SelectedGame];
@@ -75,7 +75,7 @@ namespace TheEliteUI
                         _currentDate = _clockProvider.Today;
                     }
 
-                    var rankingItems = _rankingProvider.GetRanking(SelectedGame, _currentDate, 0, PlayerRankingDto.DefaultPaginationLimit);
+                    var rankingItems = _eliteProvider.GetRanking(SelectedGame, _currentDate, 0, PlayerRankingDto.DefaultPaginationLimit);
                     
                     // can fail on window closing
                     try
