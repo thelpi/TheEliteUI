@@ -31,8 +31,10 @@ namespace TheEliteUI.Providers
 
         public IReadOnlyCollection<PlayerRankingDto> GetRanking(Game game, DateTime date, int page, int limit)
         {
+            var route = string.Format(PlayerRankingRoute, (int)game, ToDateString(date), page, limit, GetFull.ToString());
+
             var response = _client
-                .GetAsync(string.Format(PlayerRankingRoute, (int)game, ToDateString(date), page, limit, GetFull ? 1 : 0))
+                .GetAsync(route)
                 .GetAwaiter()
                 .GetResult();
 
@@ -49,8 +51,10 @@ namespace TheEliteUI.Providers
 
         public IReadOnlyCollection<StandingWrDto> GetStandingWr(Game game, DateTime atDate, bool untied, int page, int limit)
         {
+            var route = string.Format(StandingWrRoute, (int)game, ToDateString(atDate), untied.ToString(), page, limit, StillStanding.ToString());
+
             var response = _client
-                .GetAsync(string.Format(StandingWrRoute, (int)game, ToDateString(atDate), untied ? 1 : 0, page, limit, StillStanding ? 1 : 0))
+                .GetAsync(route)
                 .GetAwaiter()
                 .GetResult();
 
