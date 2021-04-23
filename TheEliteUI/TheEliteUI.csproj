@@ -61,6 +61,8 @@
     <Compile Include="PlayerRankingControl.xaml.cs">
       <DependentUpon>PlayerRankingControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\IRanking.cs" />
+    <Compile Include="ViewModels\PlayerRanking.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -110,8 +112,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ViewModels\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
