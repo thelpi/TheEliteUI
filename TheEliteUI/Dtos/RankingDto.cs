@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TheEliteUI.Models
+namespace TheEliteUI.Dtos
 {
-    public class Ranking
+    public class RankingDto
     {
         public const int MaxPoints = 6000;
         public const int DefaultPaginationLimit = 25;

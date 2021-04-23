@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using Newtonsoft.Json;
-using TheEliteUI.Models;
+using TheEliteUI.Dtos;
 
 namespace TheEliteUI.Providers
 {
@@ -25,7 +25,7 @@ namespace TheEliteUI.Providers
             };
         }
 
-        public IReadOnlyCollection<Ranking> GetRanking(Game game, DateTime date, int page, int limit)
+        public IReadOnlyCollection<RankingDto> GetRanking(Game game, DateTime date, int page, int limit)
         {
             var response = _client
                 .GetAsync(string.Format(RankingRoute, (int)game, ToDateString(date), page, limit, GetFull ? 1 : 0))
@@ -40,7 +40,7 @@ namespace TheEliteUI.Providers
                 .GetAwaiter()
                 .GetResult();
 
-            return JsonConvert.DeserializeObject<IReadOnlyCollection<Ranking>>(content);
+            return JsonConvert.DeserializeObject<IReadOnlyCollection<RankingDto>>(content);
         }
 
         private string ToDateString(DateTime date)

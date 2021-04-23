@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Controls;
-using TheEliteUI.Models;
+using TheEliteUI.Dtos;
 
 namespace TheEliteUI
 {
@@ -21,21 +21,21 @@ namespace TheEliteUI
         private readonly SourceToTargetByStep _points;
         private readonly SourceToTargetByStep _rank;
 
-        public PlayerRanking(Ranking item, int steps)
+        public PlayerRanking(RankingDto item, int steps)
         {
             InitializeComponent();
             PlayerId = item.PlayerId;
             DataContext = item;
             
-            _top = new SourceToTargetByStep(GetTargetTop(item), steps, Ranking.DefaultPaginationLimit * Realheight);
+            _top = new SourceToTargetByStep(GetTargetTop(item), steps, RankingDto.DefaultPaginationLimit * Realheight);
             _width = new SourceToTargetByStep(GetTargetWidth(item), steps, 0);
             _points = new SourceToTargetByStep(item.Points, steps, 0);
-            _rank = new SourceToTargetByStep(item.Rank, steps, Ranking.DefaultPaginationLimit + 1);
+            _rank = new SourceToTargetByStep(item.Rank, steps, RankingDto.DefaultPaginationLimit + 1);
 
             ArrangeControl(false);
         }
 
-        internal void UpdateItemtarget(Ranking item)
+        internal void UpdateItemtarget(RankingDto item)
         {
             DataContext = item;
             _top.SetNewTarget(GetTargetTop(item));
@@ -57,18 +57,18 @@ namespace TheEliteUI
             RankLabel.Content = Convert.ToInt32(_rank.SetCurrentStep(step)).ToString().PadLeft(2, '0');
         }
 
-        private static double GetTargetTop(Ranking item)
+        private static double GetTargetTop(RankingDto item)
         {
             return (item.Rank - 1) * Realheight;
         }
 
-        private static double GetTargetWidth(Ranking item)
+        private static double GetTargetWidth(RankingDto item)
         {
             // TODO: "PointsMargin" should be in pixels unit
-            var pointsToConsider = item.Points > Ranking.MinPoints
-                ? item.Points - (Ranking.MinPoints - PointsMargin)
+            var pointsToConsider = item.Points > RankingDto.MinPoints
+                ? item.Points - (RankingDto.MinPoints - PointsMargin)
                 : PointsMargin;
-            return PlayerNamePixels + ((pointsToConsider * PixelsByPoint) / Ranking.MaxPoints);
+            return PlayerNamePixels + ((pointsToConsider * PixelsByPoint) / RankingDto.MaxPoints);
         }
 
         private class SourceToTargetByStep

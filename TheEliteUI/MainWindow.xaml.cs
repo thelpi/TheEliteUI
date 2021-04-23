@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
 using System.Windows;
-using TheEliteUI.Models;
+using TheEliteUI.Dtos;
 using TheEliteUI.Providers;
 
 namespace TheEliteUI
@@ -40,7 +40,7 @@ namespace TheEliteUI
             _rankingProvider = provider ?? throw new ArgumentNullException(nameof(provider));
             _clockProvider = clockProvider ?? throw new ArgumentNullException(nameof(clockProvider));
 
-            _currentDate = Ranking.RankingStart[SelectedGame];
+            _currentDate = RankingDto.RankingStart[SelectedGame];
             _timer = new Timer(TimerDelay);
             _timer.Elapsed += _timer_Elapsed;
 
@@ -74,7 +74,7 @@ namespace TheEliteUI
                         _currentDate = _clockProvider.Today;
                     }
 
-                    var rankingItems = _rankingProvider.GetRanking(SelectedGame, _currentDate, 0, Ranking.DefaultPaginationLimit);
+                    var rankingItems = _rankingProvider.GetRanking(SelectedGame, _currentDate, 0, RankingDto.DefaultPaginationLimit);
                     
                     // can fail on window closing
                     try
@@ -105,7 +105,7 @@ namespace TheEliteUI
             _inProgress = false;
         }
 
-        private void SetRankingViewItems(IReadOnlyCollection<Ranking> rankingItems)
+        private void SetRankingViewItems(IReadOnlyCollection<RankingDto> rankingItems)
         {
             foreach (var item in rankingItems)
             {
@@ -114,7 +114,7 @@ namespace TheEliteUI
             ClearObsoletePlayersFromRankinkView(rankingItems.Select(i => i.PlayerId));
         }
 
-        private void AddOrUpdatePlayerRanking(Ranking item)
+        private void AddOrUpdatePlayerRanking(RankingDto item)
         {
             var ranking = GetPlayerRankings()
                 .SingleOrDefault(r => r.PlayerId == item.PlayerId);

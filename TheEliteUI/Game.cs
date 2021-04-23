@@ -1,4 +1,4 @@
-﻿namespace TheEliteUI.Models
+﻿namespace TheEliteUI
 {
     public enum Game
     {

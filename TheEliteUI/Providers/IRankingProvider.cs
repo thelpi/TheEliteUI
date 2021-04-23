@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using TheEliteUI.Models;
+using TheEliteUI.Dtos;
 
 namespace TheEliteUI.Providers
 {
     public interface IRankingProvider
     {
-        IReadOnlyCollection<Ranking> GetRanking(Game game, DateTime date, int page, int limit);
+        IReadOnlyCollection<RankingDto> GetRanking(Game game, DateTime date, int page, int limit);
     }
 }
