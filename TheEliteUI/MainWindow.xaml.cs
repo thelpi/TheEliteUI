@@ -5,6 +5,7 @@ using System.Timers;
 using System.Windows;
 using TheEliteUI.Dtos;
 using TheEliteUI.Providers;
+using TheEliteUI.ViewModels;
 
 namespace TheEliteUI
 {
@@ -81,7 +82,7 @@ namespace TheEliteUI
                     {
                         Dispatcher.Invoke(() =>
                         {
-                            SetRankingViewItems(rankingItems);
+                            SetRankingViewItems(rankingItems.Select(r => new PlayerRanking(r)));
                             RankingDatePicker.SelectedDate = _currentDate;
                         });
                     }
@@ -105,19 +106,19 @@ namespace TheEliteUI
             _inProgress = false;
         }
 
-        private void SetRankingViewItems(IReadOnlyCollection<PlayerRankingDto> rankingItems)
+        private void SetRankingViewItems(IEnumerable<PlayerRanking> rankingItems)
         {
             foreach (var item in rankingItems)
             {
                 AddOrUpdatePlayerRanking(item);
             }
-            ClearObsoletePlayersFromRankinkView(rankingItems.Select(i => i.PlayerId));
+            ClearObsoletePlayersFromRankinkView(rankingItems);
         }
 
-        private void AddOrUpdatePlayerRanking(PlayerRankingDto item)
+        private void AddOrUpdatePlayerRanking(PlayerRanking item)
         {
             var ranking = GetPlayerRankings()
-                .SingleOrDefault(r => r.PlayerId == item.PlayerId);
+                .SingleOrDefault(r => r.Player.IsKey(item.Key));
             if (ranking == null)
             {
                 var rk = new PlayerRankingControl(item, Steps);
@@ -129,10 +130,10 @@ namespace TheEliteUI
             }
         }
 
-        private void ClearObsoletePlayersFromRankinkView(IEnumerable<long> playerIdsToKeep)
+        private void ClearObsoletePlayersFromRankinkView(IEnumerable<PlayerRanking> playersToKeep)
         {
             GetPlayerRankings()
-                .Where(r => !playerIdsToKeep.Contains(r.PlayerId))
+                .Where(r => !playersToKeep.Any(_ => _.IsKey(r.Player.Key)))
                 .ToList()
                 .ForEach(r => RankingView.Children.Remove(r));
         }

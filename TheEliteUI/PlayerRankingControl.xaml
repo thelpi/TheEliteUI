@@ -22,7 +22,7 @@
                 <Label Background="Transparent" Name="RankLabel" Canvas.Left="3" FontWeight="Bold" Canvas.Top="1" />
             </Canvas>
             <DockPanel Margin="5, 0, 0, 0" Background="Transparent" Name="MainCanvas">
-                <Label Panel.ZIndex="1" Background="Transparent" Foreground="{Binding Path=PlayerColor, Converter={StaticResource colorConverter}}" Content="{Binding Path=PlayerName, FallbackValue=Unknown%20player}" FontSize="12" VerticalAlignment="Center" />
+                <Label Panel.ZIndex="1" Background="Transparent" Foreground="{Binding Path=HexColor, Converter={StaticResource colorConverter}}" Content="{Binding Path=Label}" FontSize="12" VerticalAlignment="Center" />
                 <DockPanel Height="30">
                     <DockPanel.Background>
                         <LinearGradientBrush SpreadMethod="Reflect" StartPoint="0 1">

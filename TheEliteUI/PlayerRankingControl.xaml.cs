@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Controls;
 using TheEliteUI.Dtos;
+using TheEliteUI.ViewModels;
 
 namespace TheEliteUI
 {
@@ -14,33 +15,33 @@ namespace TheEliteUI
         private const double PixelsByPoint = 800;
         private const double PointsMargin = 100;
 
-        public long PlayerId { get; }
+        public PlayerRanking Player { get; }
 
         private readonly SourceToTargetByStep _top;
         private readonly SourceToTargetByStep _width;
         private readonly SourceToTargetByStep _points;
         private readonly SourceToTargetByStep _rank;
 
-        public PlayerRankingControl(PlayerRankingDto item, int steps)
+        public PlayerRankingControl(PlayerRanking item, int steps)
         {
             InitializeComponent();
-            PlayerId = item.PlayerId;
+            Player = item;
             DataContext = item;
             
             _top = new SourceToTargetByStep(GetTargetTop(item), steps, PlayerRankingDto.DefaultPaginationLimit * Realheight);
             _width = new SourceToTargetByStep(GetTargetWidth(item), steps, 0);
-            _points = new SourceToTargetByStep(item.Points, steps, 0);
+            _points = new SourceToTargetByStep(item.Value, steps, 0);
             _rank = new SourceToTargetByStep(item.Rank, steps, PlayerRankingDto.DefaultPaginationLimit + 1);
 
             ArrangeControl(false);
         }
 
-        internal void UpdateItemtarget(PlayerRankingDto item)
+        internal void UpdateItemtarget(PlayerRanking item)
         {
             DataContext = item;
             _top.SetNewTarget(GetTargetTop(item));
             _width.SetNewTarget(GetTargetWidth(item));
-            _points.SetNewTarget(item.Points);
+            _points.SetNewTarget(item.Value);
             _rank.SetNewTarget(item.Rank);
         }
 
@@ -57,16 +58,16 @@ namespace TheEliteUI
             RankLabel.Content = Convert.ToInt32(_rank.SetCurrentStep(step)).ToString().PadLeft(2, '0');
         }
 
-        private static double GetTargetTop(PlayerRankingDto item)
+        private static double GetTargetTop(PlayerRanking item)
         {
             return (item.Rank - 1) * Realheight;
         }
 
-        private static double GetTargetWidth(PlayerRankingDto item)
+        private static double GetTargetWidth(PlayerRanking item)
         {
             // TODO: "PointsMargin" should be in pixels unit
-            var pointsToConsider = item.Points > PlayerRankingDto.MinPoints
-                ? item.Points - (PlayerRankingDto.MinPoints - PointsMargin)
+            var pointsToConsider = item.Value > PlayerRankingDto.MinPoints
+                ? item.Value - (PlayerRankingDto.MinPoints - PointsMargin)
                 : PointsMargin;
             return PlayerNamePixels + ((pointsToConsider * PixelsByPoint) / PlayerRankingDto.MaxPoints);
         }
