@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
 using System.Windows;
+using System.Windows.Controls;
 using TheEliteUI.Dtos;
 using TheEliteUI.Providers;
 using TheEliteUI.ViewModels;
@@ -15,7 +16,7 @@ namespace TheEliteUI
         private const int DelayBeforeRanking = 1000;
         private const int TimerDelay = DelayBeforeRanking / Steps;
         private const Game SelectedGame = Game.GoldenEye;
-        private const int DaysBetweenRanking = 200;
+        private const int DaysBetweenRanking = 50;
 
         private const string StartAnimationLabel = "Start Animation";
         private const string StopAnimationLabel = "Stop Animation";
@@ -76,13 +77,17 @@ namespace TheEliteUI
                     }
 
                     var rankingItems = _eliteProvider.GetRanking(SelectedGame, _currentDate, 0, PlayerRankingDto.DefaultPaginationLimit);
-                    
+                    var wrStandingUntiedItems = _eliteProvider.GetStandingWr(SelectedGame, _currentDate, true, 0, StandingWrDto.DefaultPaginationLimit);
+                    var wrStandingItems = _eliteProvider.GetStandingWr(SelectedGame, _currentDate, false, 0, StandingWrDto.DefaultPaginationLimit);
+
                     // can fail on window closing
                     try
                     {
                         Dispatcher.Invoke(() =>
                         {
-                            SetRankingViewItems(rankingItems.Select(r => new PlayerRanking(r)));
+                            SetRankingViewItems(RankingView, rankingItems.Select(r => new PlayerRanking(r)));
+                            SetRankingViewItems(WrStandingUntiedView, wrStandingUntiedItems.Select(r => new WrRanking(r)), true);
+                            SetRankingViewItems(WrStandingView, wrStandingItems.Select(r => new WrRanking(r)), false);
                             RankingDatePicker.SelectedDate = _currentDate;
                         });
                     }
@@ -94,7 +99,9 @@ namespace TheEliteUI
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        RefreshPlayersTopPosition();
+                        RefreshItemsTopPosition<PlayerRankingControl>(RankingView);
+                        RefreshItemsTopPosition<WrRankingControl>(WrStandingUntiedView);
+                        RefreshItemsTopPosition<WrRankingControl>(WrStandingView);
                     });
                 }
                 catch { }
@@ -106,23 +113,32 @@ namespace TheEliteUI
             _inProgress = false;
         }
 
-        private void SetRankingViewItems(IEnumerable<PlayerRanking> rankingItems)
+        private void SetRankingViewItems(Canvas view, IEnumerable<PlayerRanking> rankingItems)
         {
             foreach (var item in rankingItems)
             {
-                AddOrUpdatePlayerRanking(item);
+                AddOrUpdatePlayerRanking(view, item);
             }
-            ClearObsoletePlayersFromRankinkView(rankingItems);
+            ClearObsoleteItemsFromRankinkView<PlayerRankingControl>(view, rankingItems);
         }
 
-        private void AddOrUpdatePlayerRanking(PlayerRanking item)
+        private void SetRankingViewItems(Canvas view, IEnumerable<WrRanking> rankingItems, bool untiedMode)
         {
-            var ranking = GetPlayerRankings()
+            foreach (var item in rankingItems)
+            {
+                AddOrUpdateWrStandingRanking(view, item, untiedMode);
+            }
+            ClearObsoleteItemsFromRankinkView<WrRankingControl>(view, rankingItems);
+        }
+
+        private void AddOrUpdatePlayerRanking(Canvas view, PlayerRanking item)
+        {
+            var ranking = GetItems<PlayerRankingControl>(view)
                 .SingleOrDefault(r => r.Item.IsKey(item.Key));
             if (ranking == null)
             {
                 var rk = new PlayerRankingControl(item, Steps);
-                RankingView.Children.Add(rk);
+                view.Children.Add(rk);
             }
             else
             {
@@ -131,17 +147,34 @@ namespace TheEliteUI
             }
         }
 
-        private void ClearObsoletePlayersFromRankinkView(IEnumerable<PlayerRanking> playersToKeep)
+        private void AddOrUpdateWrStandingRanking(Canvas view, WrRanking item, bool untiedMode)
         {
-            GetPlayerRankings()
-                .Where(r => !playersToKeep.Any(_ => _.IsKey(r.Item.Key)))
-                .ToList()
-                .ForEach(r => RankingView.Children.Remove(r));
+            var ranking = GetItems<WrRankingControl>(view)
+                .SingleOrDefault(r => r.Item.IsKey(item.Key));
+            if (ranking == null)
+            {
+                var rk = new WrRankingControl(item, Steps, untiedMode);
+                view.Children.Add(rk);
+            }
+            else
+            {
+                // TODO: set once
+                ranking.UpdateItemtarget(item, StandingWrDto.MinDays,
+                    untiedMode ? StandingWrDto.MaxDaysUntied : StandingWrDto.MaxDaysTied);
+            }
         }
 
-        private void RefreshPlayersTopPosition()
+        private void ClearObsoleteItemsFromRankinkView<T>(Canvas view, IEnumerable<IRanking> itemsToKeep) where T : RankingControl
         {
-            GetPlayerRankings()
+            GetItems<T>(view)
+                .Where(r => !itemsToKeep.Any(_ => _.IsKey(r.Item.Key)))
+                .ToList()
+                .ForEach(r => view.Children.Remove(r));
+        }
+
+        private void RefreshItemsTopPosition<T>(Canvas view) where T : RankingControl
+        {
+            GetItems<T>(view)
                 .ToList()
                 .ForEach(r => r.ArrangeControl());
         }
@@ -171,9 +204,9 @@ namespace TheEliteUI
             AnimationButton.Content = StartAnimationLabel;
         }
 
-        private IEnumerable<PlayerRankingControl> GetPlayerRankings()
+        private IEnumerable<T> GetItems<T>(Canvas view)
         {
-            return RankingView.Children.OfType<PlayerRankingControl>();
+            return view.Children.OfType<T>();
         }
     }
 }

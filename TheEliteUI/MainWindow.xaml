@@ -10,6 +10,24 @@
             <DatePicker Name="RankingDatePicker" />
             <Button Margin="5, 0, 0, 0" Name="AnimationButton" Click="AnimationButton_Click" />
         </StackPanel>
-        <Canvas DockPanel.Dock="Bottom" Margin="0, 5, 0, 0" Name="RankingView" />
+        <Grid DockPanel.Dock="Bottom" Margin="0, 5, 0, 0">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <GroupBox Header="Players ranking" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Padding="10">
+                <Canvas Name="RankingView" />
+            </GroupBox>
+            <GroupBox Header="Longest standing WR" Grid.Row="0" Grid.Column="1" Padding="10">
+                <Canvas Name="WrStandingView" />
+            </GroupBox>
+            <GroupBox Header="Longest standing untied WR" Grid.Row="1" Grid.Column="1" Padding="10">
+                <Canvas Name="WrStandingUntiedView" />
+            </GroupBox>
+        </Grid>
     </DockPanel>
 </Window>

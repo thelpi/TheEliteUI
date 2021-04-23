@@ -6,7 +6,7 @@ namespace TheEliteUI.Dtos
     public class PlayerRankingDto
     {
         public const int MaxPoints = 6000;
-        public const int DefaultPaginationLimit = 25;
+        public const int DefaultPaginationLimit = 20;
         // note: this value is connected to pagination
         public const int MinPoints = 4000;
 
