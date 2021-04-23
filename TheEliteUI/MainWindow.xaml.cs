@@ -40,7 +40,7 @@ namespace TheEliteUI
             _rankingProvider = provider ?? throw new ArgumentNullException(nameof(provider));
             _clockProvider = clockProvider ?? throw new ArgumentNullException(nameof(clockProvider));
 
-            _currentDate = RankingDto.RankingStart[SelectedGame];
+            _currentDate = PlayerRankingDto.RankingStart[SelectedGame];
             _timer = new Timer(TimerDelay);
             _timer.Elapsed += _timer_Elapsed;
 
@@ -74,7 +74,7 @@ namespace TheEliteUI
                         _currentDate = _clockProvider.Today;
                     }
 
-                    var rankingItems = _rankingProvider.GetRanking(SelectedGame, _currentDate, 0, RankingDto.DefaultPaginationLimit);
+                    var rankingItems = _rankingProvider.GetRanking(SelectedGame, _currentDate, 0, PlayerRankingDto.DefaultPaginationLimit);
                     
                     // can fail on window closing
                     try
@@ -105,7 +105,7 @@ namespace TheEliteUI
             _inProgress = false;
         }
 
-        private void SetRankingViewItems(IReadOnlyCollection<RankingDto> rankingItems)
+        private void SetRankingViewItems(IReadOnlyCollection<PlayerRankingDto> rankingItems)
         {
             foreach (var item in rankingItems)
             {
@@ -114,13 +114,13 @@ namespace TheEliteUI
             ClearObsoletePlayersFromRankinkView(rankingItems.Select(i => i.PlayerId));
         }
 
-        private void AddOrUpdatePlayerRanking(RankingDto item)
+        private void AddOrUpdatePlayerRanking(PlayerRankingDto item)
         {
             var ranking = GetPlayerRankings()
                 .SingleOrDefault(r => r.PlayerId == item.PlayerId);
             if (ranking == null)
             {
-                var rk = new PlayerRanking(item, Steps);
+                var rk = new PlayerRankingControl(item, Steps);
                 RankingView.Children.Add(rk);
             }
             else
@@ -169,9 +169,9 @@ namespace TheEliteUI
             AnimationButton.Content = StartAnimationLabel;
         }
 
-        private IEnumerable<PlayerRanking> GetPlayerRankings()
+        private IEnumerable<PlayerRankingControl> GetPlayerRankings()
         {
-            return RankingView.Children.OfType<PlayerRanking>();
+            return RankingView.Children.OfType<PlayerRankingControl>();
         }
     }
 }

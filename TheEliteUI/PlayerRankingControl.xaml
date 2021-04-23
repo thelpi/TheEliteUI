@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="TheEliteUI.PlayerRanking"
+﻿<UserControl x:Class="TheEliteUI.PlayerRankingControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -9,14 +9,14 @@
     <UserControl.Resources>
         <localConverters:HexaToColorConverter x:Key="colorConverter" />
     </UserControl.Resources>
-    <Border BorderThickness="{Binding Source={x:Static local:PlayerRanking.ControlBorderThickness}}" CornerRadius="3">
+    <Border BorderThickness="{Binding Source={x:Static local:PlayerRankingControl.ControlBorderThickness}}" CornerRadius="3">
         <Border.BorderBrush>
             <LinearGradientBrush StartPoint="0 0" EndPoint="1 1" >
                 <GradientStop Color="Navy" Offset="0" />
                 <GradientStop Color="Black" Offset="1" />
             </LinearGradientBrush>
         </Border.BorderBrush>
-        <StackPanel Background="Black" Height="{Binding Source={x:Static local:PlayerRanking.ControlHeight}}" Orientation="Horizontal">
+        <StackPanel Background="Black" Height="{Binding Source={x:Static local:PlayerRankingControl.ControlHeight}}" Orientation="Horizontal">
             <Canvas Background="Transparent" Width="25">
                 <Rectangle Canvas.Left="2.5" Canvas.Top="2.5" Width="25" Height="25" Fill="White" />
                 <Label Background="Transparent" Name="RankLabel" Canvas.Left="3" FontWeight="Bold" Canvas.Top="1" />

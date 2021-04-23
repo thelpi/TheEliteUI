@@ -4,7 +4,7 @@ using TheEliteUI.Dtos;
 
 namespace TheEliteUI
 {
-    public partial class PlayerRanking : UserControl
+    public partial class PlayerRankingControl : UserControl
     {
         public static double ControlHeight { get; } = 30;
         public static double ControlBorderThickness { get; } = 3;
@@ -21,21 +21,21 @@ namespace TheEliteUI
         private readonly SourceToTargetByStep _points;
         private readonly SourceToTargetByStep _rank;
 
-        public PlayerRanking(RankingDto item, int steps)
+        public PlayerRankingControl(PlayerRankingDto item, int steps)
         {
             InitializeComponent();
             PlayerId = item.PlayerId;
             DataContext = item;
             
-            _top = new SourceToTargetByStep(GetTargetTop(item), steps, RankingDto.DefaultPaginationLimit * Realheight);
+            _top = new SourceToTargetByStep(GetTargetTop(item), steps, PlayerRankingDto.DefaultPaginationLimit * Realheight);
             _width = new SourceToTargetByStep(GetTargetWidth(item), steps, 0);
             _points = new SourceToTargetByStep(item.Points, steps, 0);
-            _rank = new SourceToTargetByStep(item.Rank, steps, RankingDto.DefaultPaginationLimit + 1);
+            _rank = new SourceToTargetByStep(item.Rank, steps, PlayerRankingDto.DefaultPaginationLimit + 1);
 
             ArrangeControl(false);
         }
 
-        internal void UpdateItemtarget(RankingDto item)
+        internal void UpdateItemtarget(PlayerRankingDto item)
         {
             DataContext = item;
             _top.SetNewTarget(GetTargetTop(item));
@@ -57,18 +57,18 @@ namespace TheEliteUI
             RankLabel.Content = Convert.ToInt32(_rank.SetCurrentStep(step)).ToString().PadLeft(2, '0');
         }
 
-        private static double GetTargetTop(RankingDto item)
+        private static double GetTargetTop(PlayerRankingDto item)
         {
             return (item.Rank - 1) * Realheight;
         }
 
-        private static double GetTargetWidth(RankingDto item)
+        private static double GetTargetWidth(PlayerRankingDto item)
         {
             // TODO: "PointsMargin" should be in pixels unit
-            var pointsToConsider = item.Points > RankingDto.MinPoints
-                ? item.Points - (RankingDto.MinPoints - PointsMargin)
+            var pointsToConsider = item.Points > PlayerRankingDto.MinPoints
+                ? item.Points - (PlayerRankingDto.MinPoints - PointsMargin)
                 : PointsMargin;
-            return PlayerNamePixels + ((pointsToConsider * PixelsByPoint) / RankingDto.MaxPoints);
+            return PlayerNamePixels + ((pointsToConsider * PixelsByPoint) / PlayerRankingDto.MaxPoints);
         }
 
         private class SourceToTargetByStep

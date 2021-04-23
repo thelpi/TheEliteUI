@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TheEliteUI.Dtos
 {
-    public class RankingDto
+    public class PlayerRankingDto
     {
         public const int MaxPoints = 6000;
         public const int DefaultPaginationLimit = 25;

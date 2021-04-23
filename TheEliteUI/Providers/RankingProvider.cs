@@ -25,7 +25,7 @@ namespace TheEliteUI.Providers
             };
         }
 
-        public IReadOnlyCollection<RankingDto> GetRanking(Game game, DateTime date, int page, int limit)
+        public IReadOnlyCollection<PlayerRankingDto> GetRanking(Game game, DateTime date, int page, int limit)
         {
             var response = _client
                 .GetAsync(string.Format(RankingRoute, (int)game, ToDateString(date), page, limit, GetFull ? 1 : 0))
@@ -40,7 +40,7 @@ namespace TheEliteUI.Providers
                 .GetAwaiter()
                 .GetResult();
 
-            return JsonConvert.DeserializeObject<IReadOnlyCollection<RankingDto>>(content);
+            return JsonConvert.DeserializeObject<IReadOnlyCollection<PlayerRankingDto>>(content);
         }
 
         private string ToDateString(DateTime date)
