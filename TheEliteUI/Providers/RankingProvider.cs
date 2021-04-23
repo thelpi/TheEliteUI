@@ -40,11 +40,7 @@ namespace TheEliteUI.Providers
                 .GetAwaiter()
                 .GetResult();
 
-            var rankingList = JsonConvert.DeserializeObject<IReadOnlyCollection<Ranking>>(content);
-
-            return rankingList
-                .Select((r, i) => r.WithRank(i + 1))
-                .ToList();
+            return JsonConvert.DeserializeObject<IReadOnlyCollection<Ranking>>(content);
         }
 
         private string ToDateString(DateTime date)
