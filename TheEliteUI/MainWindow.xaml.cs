@@ -86,8 +86,8 @@ namespace TheEliteUI
                         Dispatcher.Invoke(() =>
                         {
                             SetRankingViewItems(RankingView, rankingItems.Select(r => new PlayerRanking(r)));
-                            SetRankingViewItems(WrStandingUntiedView, wrStandingUntiedItems.Select(r => new WrRanking(r)), true);
-                            SetRankingViewItems(WrStandingView, wrStandingItems.Select(r => new WrRanking(r)), false);
+                            SetRankingViewItems(WrStandingUntiedView, wrStandingUntiedItems.Select(r => new WrRanking(r, true)));
+                            SetRankingViewItems(WrStandingView, wrStandingItems.Select(r => new WrRanking(r, false)));
                             RankingDatePicker.SelectedDate = _currentDate;
                         });
                     }
@@ -122,11 +122,11 @@ namespace TheEliteUI
             ClearObsoleteItemsFromRankinkView<PlayerRankingControl>(view, rankingItems);
         }
 
-        private void SetRankingViewItems(Canvas view, IEnumerable<WrRanking> rankingItems, bool untiedMode)
+        private void SetRankingViewItems(Canvas view, IEnumerable<WrRanking> rankingItems)
         {
             foreach (var item in rankingItems)
             {
-                AddOrUpdateWrStandingRanking(view, item, untiedMode);
+                AddOrUpdateWrStandingRanking(view, item);
             }
             ClearObsoleteItemsFromRankinkView<WrRankingControl>(view, rankingItems);
         }
@@ -143,24 +143,23 @@ namespace TheEliteUI
             else
             {
                 // TODO: set once
-                ranking.UpdateItemtarget(item, PlayerRankingDto.MinPoints, PlayerRankingDto.MaxPoints);
+                ranking.UpdateItemtarget(item);
             }
         }
 
-        private void AddOrUpdateWrStandingRanking(Canvas view, WrRanking item, bool untiedMode)
+        private void AddOrUpdateWrStandingRanking(Canvas view, WrRanking item)
         {
             var ranking = GetItems<WrRankingControl>(view)
                 .SingleOrDefault(r => r.Item.IsKey(item.Key));
             if (ranking == null)
             {
-                var rk = new WrRankingControl(item, Steps, untiedMode);
+                var rk = new WrRankingControl(item, Steps);
                 view.Children.Add(rk);
             }
             else
             {
                 // TODO: set once
-                ranking.UpdateItemtarget(item, StandingWrDto.MinDays,
-                    untiedMode ? StandingWrDto.MaxDaysUntied : StandingWrDto.MaxDaysTied);
+                ranking.UpdateItemtarget(item);
             }
         }
 

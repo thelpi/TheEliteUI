@@ -1,5 +1,4 @@
-﻿using TheEliteUI.Dtos;
-using TheEliteUI.ViewModels;
+﻿using TheEliteUI.ViewModels;
 
 namespace TheEliteUI
 {
@@ -8,12 +7,8 @@ namespace TheEliteUI
     /// </summary>
     public partial class WrRankingControl : RankingControl
     {
-        public WrRankingControl(WrRanking item, int steps, bool untiedMode)
-            : base(item,
-                  steps,
-                  StandingWrDto.MinDays,
-                  untiedMode ? StandingWrDto.MaxDaysUntied : StandingWrDto.MaxDaysTied,
-                  StandingWrDto.DefaultPaginationLimit)
+        public WrRankingControl(WrRanking item, int steps)
+            : base(item, steps)
         {
             InitializeComponent();
             RankLabel = WrRankLabel;

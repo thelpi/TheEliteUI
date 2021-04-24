@@ -18,14 +18,23 @@ namespace TheEliteUI.ViewModels
 
         public int Position => Rank + _dto.SubRank;
 
+        public double ItemsCount => StandingWrDto.DefaultPaginationLimit;
+
+        public double ValueMin => StandingWrDto.MinDays;
+
+        public double ValueMax => Untied ? StandingWrDto.MaxDaysUntied : StandingWrDto.MaxDaysTied;
+
+        public bool Untied { get; }
+
         public bool IsKey(object otherKey)
         {
             return otherKey?.ToString() == Key.ToString();
         }
 
-        internal WrRanking(StandingWrDto dto)
+        internal WrRanking(StandingWrDto dto, bool untied)
         {
             _dto = dto;
+            Untied = untied;
         }
     }
 }

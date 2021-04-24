@@ -31,23 +31,23 @@ namespace TheEliteUI
 
         }
 
-        public RankingControl(IRanking item, int steps, double min, double max, int items)
+        public RankingControl(IRanking item, int steps)
         {
             Item = item;
             DataContext = item;
 
-            _top = new SourceToTargetByStep(GetTargetTop(item), steps, items * Realheight);
-            _width = new SourceToTargetByStep(GetTargetWidth(item, min, max), steps, 0);
+            _top = new SourceToTargetByStep(GetTargetTop(item), steps, item.ItemsCount * Realheight);
+            _width = new SourceToTargetByStep(GetTargetWidth(item), steps, 0);
             _points = new SourceToTargetByStep(item.Value, steps, 0);
-            _rank = new SourceToTargetByStep(item.Rank, steps, items + 1);
+            _rank = new SourceToTargetByStep(item.Rank, steps, item.ItemsCount + 1);
             ValueParser = v => v;
         }
 
-        internal void UpdateItemtarget(IRanking item, double min, double max)
+        internal void UpdateItemtarget(IRanking item)
         {
             DataContext = item;
             _top.SetNewTarget(GetTargetTop(item));
-            _width.SetNewTarget(GetTargetWidth(item, min, max));
+            _width.SetNewTarget(GetTargetWidth(item));
             _points.SetNewTarget(item.Value);
             _rank.SetNewTarget(item.Rank);
         }
@@ -70,13 +70,13 @@ namespace TheEliteUI
             return (item.Position - 1) * Realheight;
         }
 
-        private static double GetTargetWidth(IRanking item, double min, double max)
+        private static double GetTargetWidth(IRanking item)
         {
             // TODO: "ValueMargin" should be in pixels unit
-            var valueToConsider = item.Value > min
-                ? item.Value - (min - ValueMargin)
+            var valueToConsider = item.Value > item.ValueMin
+                ? item.Value - (item.ValueMin - ValueMargin)
                 : ValueMargin;
-            return LabelPixels + ((valueToConsider * PixelsByValue) / max);
+            return LabelPixels + ((valueToConsider * PixelsByValue) / item.ValueMax);
         }
 
         private class SourceToTargetByStep

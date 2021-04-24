@@ -7,7 +7,7 @@ namespace TheEliteUI.Dtos
     {
         public const int MaxPoints = 6000;
         public const int DefaultPaginationLimit = 20;
-        // note: this value is connected to pagination
+        // TODO: find a method to link the value with the pagination
         public const int MinPoints = 4000;
 
         public static readonly IReadOnlyDictionary<Game, DateTime> RankingStart = new Dictionary<Game, DateTime>

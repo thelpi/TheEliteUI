@@ -18,6 +18,12 @@ namespace TheEliteUI.ViewModels
 
         public int Position => Rank + _dto.SubRank;
 
+        public double ItemsCount => PlayerRankingDto.DefaultPaginationLimit;
+
+        public double ValueMin => PlayerRankingDto.MinPoints;
+
+        public double ValueMax => PlayerRankingDto.MaxPoints;
+
         public bool IsKey(object otherKey)
         {
             return otherKey != null

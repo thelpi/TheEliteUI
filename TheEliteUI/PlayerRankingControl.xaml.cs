@@ -1,16 +1,11 @@
-﻿using TheEliteUI.Dtos;
-using TheEliteUI.ViewModels;
+﻿using TheEliteUI.ViewModels;
 
 namespace TheEliteUI
 {
     public partial class PlayerRankingControl : RankingControl
     {
         public PlayerRankingControl(PlayerRanking item, int steps)
-            : base(item,
-                  steps,
-                  PlayerRankingDto.MinPoints,
-                  PlayerRankingDto.MaxPoints,
-                  PlayerRankingDto.DefaultPaginationLimit)
+            : base(item, steps)
         {
             InitializeComponent();
             RankLabel = PlayerRankLabel;
