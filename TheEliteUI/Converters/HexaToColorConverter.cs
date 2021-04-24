@@ -7,9 +7,11 @@ namespace TheEliteUI.Converters
 {
     public class HexaToColorConverter : IValueConverter
     {
+        private static BrushConverter _brushConverter = new BrushConverter();
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (SolidColorBrush)(new BrushConverter().ConvertFrom($"#{value}"));
+            return _brushConverter.ConvertFrom($"#{value}");
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
