@@ -20,18 +20,21 @@ namespace TheEliteUI
         private readonly SourceToTargetByStep _width;
         private readonly SourceToTargetByStep _points;
         private readonly SourceToTargetByStep _rank;
+ 
+        protected Panel MainPanel { private get; set; }
+        protected Label ValueLabel { private get; set; }
+        protected Label RankLabel { private get; set; }
 
-        public virtual Panel MainPanel { get; protected set; }
-        public virtual Label ValueLabel { get; protected set; }
-        public virtual Label RankLabel { get; protected set; }
-        protected virtual Func<double, object> ValueParser { get; set; }
+        private readonly Func<double, object> _valueParser;
 
         public RankingControl()
         {
-
+            // do not remove this controller
         }
 
-        public RankingControl(IRanking item, int steps)
+        public RankingControl(IRanking item,
+            int steps,
+            Func<double, object> valueParser)
         {
             Item = item;
             DataContext = item;
@@ -40,7 +43,7 @@ namespace TheEliteUI
             _width = new SourceToTargetByStep(GetTargetWidth(item), steps, 0);
             _points = new SourceToTargetByStep(item.Value, steps, 0);
             _rank = new SourceToTargetByStep(item.Rank, steps, item.ItemsCount + 1);
-            ValueParser = v => v;
+            _valueParser = valueParser;
         }
 
         internal void UpdateItemtarget(IRanking item)
@@ -61,7 +64,7 @@ namespace TheEliteUI
         {
             SetValue(Canvas.TopProperty, _top.SetCurrentStep(step));
             MainPanel.Width = _width.SetCurrentStep(step);
-            ValueLabel.Content = ValueParser(_points.SetCurrentStep(step));
+            ValueLabel.Content = _valueParser(_points.SetCurrentStep(step));
             RankLabel.Content = Convert.ToInt32(_rank.SetCurrentStep(step)).ToString().PadLeft(2, '0');
         }
 

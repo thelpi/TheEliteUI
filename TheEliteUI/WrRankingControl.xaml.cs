@@ -2,19 +2,15 @@
 
 namespace TheEliteUI
 {
-    /// <summary>
-    /// Logique d'interaction pour WrRanking.xaml
-    /// </summary>
     public partial class WrRankingControl : RankingControl
     {
         public WrRankingControl(WrRanking item, int steps)
-            : base(item, steps)
+            : base(item, steps, v => System.Convert.ToInt32(v))
         {
             InitializeComponent();
             RankLabel = WrRankLabel;
             MainPanel = WrMainPanel;
             ValueLabel = DaysLabel;
-            ValueParser = v => System.Convert.ToInt32(v);
             ArrangeControl(false);
         }
     }
