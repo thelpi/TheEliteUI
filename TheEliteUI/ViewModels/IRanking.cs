@@ -7,6 +7,7 @@
         int Value { get; }
         string HexColor { get; }
         int Rank { get; }
+        int Position { get; }
 
         bool IsKey(object otherKey);
     }

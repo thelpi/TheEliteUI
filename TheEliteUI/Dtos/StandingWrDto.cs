@@ -21,5 +21,6 @@ namespace TheEliteUI.Dtos
         public int StandingDays { get; set; }
         public bool StillWr { get; set; }
         public int Rank { get; set; }
+        public int SubRank { get; set; }
     }
 }

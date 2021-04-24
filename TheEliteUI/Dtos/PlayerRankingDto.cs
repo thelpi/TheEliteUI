@@ -25,5 +25,6 @@ namespace TheEliteUI.Dtos
         public int RecordsCount { get; set; }
         public string PlayerColor { get; set; }
         public int Rank { get; set; }
+        public int SubRank { get; set; }
     }
 }

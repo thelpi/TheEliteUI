@@ -16,6 +16,8 @@ namespace TheEliteUI.ViewModels
 
         public int Rank => _dto.Rank;
 
+        public int Position => Rank + _dto.SubRank;
+
         public bool IsKey(object otherKey)
         {
             return otherKey != null

@@ -67,7 +67,7 @@ namespace TheEliteUI
 
         private static double GetTargetTop(IRanking item)
         {
-            return (item.Rank - 1) * Realheight;
+            return (item.Position - 1) * Realheight;
         }
 
         private static double GetTargetWidth(IRanking item, double min, double max)

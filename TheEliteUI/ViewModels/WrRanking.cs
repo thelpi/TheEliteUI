@@ -1,5 +1,4 @@
-﻿using System;
-using TheEliteUI.Dtos;
+﻿using TheEliteUI.Dtos;
 
 namespace TheEliteUI.ViewModels
 {
@@ -16,6 +15,8 @@ namespace TheEliteUI.ViewModels
         public string HexColor => "ffffff";
 
         public int Rank => _dto.Rank;
+
+        public int Position => Rank + _dto.SubRank;
 
         public bool IsKey(object otherKey)
         {
