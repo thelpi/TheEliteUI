@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using TheEliteUI.ViewModels;
 
@@ -8,11 +9,14 @@ namespace TheEliteUI
     {
         public static double ControlHeight { get; } = 30;
         public static double ControlBorderThickness { get; } = 3;
-        public static double Realheight => ControlHeight + (2 * ControlBorderThickness);
+        public static double Realheight => ControlHeight + (2 * ControlBorderThickness) + SpaceBetweenRanking;
 
-        private const double LabelPixels = 150;
-        private const double PixelsByValue = 800;
-        private const double ValueMargin = 100;
+        // minimal width of the ranking control (mostly for label)
+        private const double MinimalWidth = 150;
+        // don't use the full panel width
+        // because the right-padding sets on parent container is ignored
+        private const double ContainerAvailableWidthRate = 0.95;
+        private const double SpaceBetweenRanking = 2;
 
         public IRanking Item { get; }
 
@@ -20,12 +24,12 @@ namespace TheEliteUI
         private readonly SourceToTargetByStep _width;
         private readonly SourceToTargetByStep _points;
         private readonly SourceToTargetByStep _rank;
- 
+        private readonly Func<double, object> _valueParser;
+        private readonly FrameworkElement _container;
+
         protected Panel MainPanel { private get; set; }
         protected Label ValueLabel { private get; set; }
         protected Label RankLabel { private get; set; }
-
-        private readonly Func<double, object> _valueParser;
 
         public RankingControl()
         {
@@ -34,10 +38,13 @@ namespace TheEliteUI
 
         public RankingControl(IRanking item,
             int steps,
-            Func<double, object> valueParser)
+            Func<double, object> valueParser,
+            FrameworkElement container)
         {
             Item = item;
             DataContext = item;
+
+            _container = container;
 
             _top = new SourceToTargetByStep(GetTargetTop(item), steps, item.ItemsCount * Realheight);
             _width = new SourceToTargetByStep(GetTargetWidth(item), steps, 0);
@@ -73,13 +80,16 @@ namespace TheEliteUI
             return (item.Position - 1) * Realheight;
         }
 
-        private static double GetTargetWidth(IRanking item)
+        private double GetTargetWidth(IRanking item)
         {
-            // TODO: "ValueMargin" should be in pixels unit
-            var valueToConsider = item.Value > item.ValueMin
-                ? item.Value - (item.ValueMin - ValueMargin)
-                : ValueMargin;
-            return LabelPixels + ((valueToConsider * PixelsByValue) / item.ValueMax);
+            var availableWidth = (_container.ActualWidth * ContainerAvailableWidthRate) - MinimalWidth;
+
+            var relativeValue = item.Value - item.ValueMin;
+            relativeValue = relativeValue < 0 ? 0 : relativeValue;
+
+            var widthRateOfvalue = relativeValue / (item.ValueMax - item.ValueMin);
+
+            return MinimalWidth + (availableWidth * widthRateOfvalue);
         }
 
         private class SourceToTargetByStep

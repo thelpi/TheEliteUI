@@ -16,7 +16,7 @@ namespace TheEliteUI
         private const int DelayBeforeRanking = 500;
         private const int TimerDelay = DelayBeforeRanking / Steps;
         private const Game SelectedGame = Game.GoldenEye;
-        private const int DaysBetweenRanking = 50;
+        private const int DaysBetweenRanking = 100;
 
         private const string StartAnimationLabel = "Start Animation";
         private const string StopAnimationLabel = "Stop Animation";
@@ -137,7 +137,7 @@ namespace TheEliteUI
                 .SingleOrDefault(r => r.Item.IsKey(item.Key));
             if (ranking == null)
             {
-                var rk = new PlayerRankingControl(item, Steps);
+                var rk = new PlayerRankingControl(item, Steps, view);
                 view.Children.Add(rk);
             }
             else
@@ -153,7 +153,7 @@ namespace TheEliteUI
                 .SingleOrDefault(r => r.Item.IsKey(item.Key));
             if (ranking == null)
             {
-                var rk = new WrRankingControl(item, Steps);
+                var rk = new WrRankingControl(item, Steps, view);
                 view.Children.Add(rk);
             }
             else

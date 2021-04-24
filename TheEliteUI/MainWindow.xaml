@@ -20,13 +20,13 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <GroupBox Header="Players ranking" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Padding="10">
-                <Canvas Name="RankingView" />
+                <Canvas Name="RankingView" HorizontalAlignment="Stretch" />
             </GroupBox>
             <GroupBox Header="Longest standing WR" Grid.Row="0" Grid.Column="1" Padding="10">
-                <Canvas Name="WrStandingView" />
+                <Canvas Name="WrStandingView" HorizontalAlignment="Stretch" />
             </GroupBox>
             <GroupBox Header="Longest standing untied WR" Grid.Row="1" Grid.Column="1" Padding="10">
-                <Canvas Name="WrStandingUntiedView" />
+                <Canvas Name="WrStandingUntiedView" HorizontalAlignment="Stretch" />
             </GroupBox>
         </Grid>
     </DockPanel>
