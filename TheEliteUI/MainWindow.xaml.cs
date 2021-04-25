@@ -81,15 +81,18 @@ namespace TheEliteUI
                     {
                         Dispatcher.Invoke(() =>
                         {
-                            SetRankingViewItems(RankingView,
+                            SetRankingViewItems(
+                                RankingView,
                                 rankingItems.Select(r => new PlayerRanking(r)),
-                                (r) => new PlayerRankingControl(r, Steps, RankingView));
-                            SetRankingViewItems(WrStandingUntiedView,
+                                CreatePlayerRankingControl);
+                            SetRankingViewItems(
+                                WrStandingUntiedView,
                                 wrStandingUntiedItems.Select(r => new WrRanking(r, true)),
-                                (r) => new WrRankingControl(r, Steps, RankingView));
-                            SetRankingViewItems(WrStandingView,
+                                CreateWrRankingControl);
+                            SetRankingViewItems(
+                                WrStandingView,
                                 wrStandingItems.Select(r => new WrRanking(r, false)),
-                                (r) => new WrRankingControl(r, Steps, RankingView));
+                                CreateWrRankingControl);
                             RankingDatePicker.SelectedDate = _currentDate;
                         });
                     }
@@ -113,6 +116,20 @@ namespace TheEliteUI
             }
             
             _inProgress = false;
+        }
+
+        private WrRankingControl CreateWrRankingControl(WrRanking r)
+        {
+            var control = new WrRankingControl(r, Steps, RankingView);
+            // the tooltip is rebuild each time the mouse is hover the control
+            // but the content while hovering is not dynamic
+            control.MouseEnter += (s, e) => control.ToolTip = (control.DataContext as WrRanking).GetToolTip();
+            return control;
+        }
+
+        private PlayerRankingControl CreatePlayerRankingControl(PlayerRanking r)
+        {
+            return new PlayerRankingControl(r, Steps, RankingView);
         }
 
         private void SetRankingViewItems<TItem, TControl>(
@@ -186,12 +203,10 @@ namespace TheEliteUI
 
         private void ChangeButtonStyle(bool toStop)
         {
-            var imgName = toStop ? "noatunpause.png" : "noatunplay.png";
-            var imgUri = new Uri($"pack://application:,,,/TheEliteUI;component/Resources/{imgName}", UriKind.RelativeOrAbsolute);
-
+            var imgSource = UiExtensions.CreateImgSource(toStop ? "noatunpause.png" : "noatunplay.png");
             var img = AnimationButton.Content as Image;
             img.ToolTip = toStop ? StopAnimationLabel : StartAnimationLabel;
-            img.Source = System.Windows.Media.Imaging.BitmapFrame.Create(imgUri);
+            img.Source = imgSource;
         }
 
         private IEnumerable<T> GetItems<T>(Canvas view)

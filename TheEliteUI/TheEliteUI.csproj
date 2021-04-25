@@ -57,6 +57,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\StageToImageConverter.cs" />
     <Compile Include="Dtos\StandingWrDto.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="Providers\ClockProvider.cs" />
@@ -66,11 +67,15 @@
     </Compile>
     <Compile Include="RankingControl.cs" />
     <Compile Include="Stage.cs" />
+    <Compile Include="UiExtensions.cs" />
     <Compile Include="ViewModels\IRanking.cs" />
     <Compile Include="ViewModels\PlayerRanking.cs" />
     <Compile Include="ViewModels\WrRanking.cs" />
     <Compile Include="WrRankingControl.xaml.cs">
       <DependentUpon>WrRankingControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WrRankingToolTipControl.xaml.cs">
+      <DependentUpon>WrRankingToolTipControl.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -92,6 +97,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="WrRankingControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WrRankingToolTipControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
