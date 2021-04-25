@@ -29,13 +29,9 @@ namespace TheEliteUI
         private int _step = 0;
         private int _daysBetweenRanking = 100;
 
-        public MainWindow()
-            : this(new EliteProvider(), new ClockProvider())
-        { }
+        public MainWindow() : this(new EliteProvider(), new ClockProvider()) { }
 
-        public MainWindow(
-            IEliteProvider provider,
-            IClockProvider clockProvider)
+        public MainWindow(IEliteProvider provider, IClockProvider clockProvider)
         {
             InitializeComponent();
 
@@ -85,9 +81,15 @@ namespace TheEliteUI
                     {
                         Dispatcher.Invoke(() =>
                         {
-                            SetRankingViewItems(RankingView, rankingItems.Select(r => new PlayerRanking(r)));
-                            SetRankingViewItems(WrStandingUntiedView, wrStandingUntiedItems.Select(r => new WrRanking(r, true)));
-                            SetRankingViewItems(WrStandingView, wrStandingItems.Select(r => new WrRanking(r, false)));
+                            SetRankingViewItems(RankingView,
+                                rankingItems.Select(r => new PlayerRanking(r)),
+                                (r) => new PlayerRankingControl(r, Steps, RankingView));
+                            SetRankingViewItems(WrStandingUntiedView,
+                                wrStandingUntiedItems.Select(r => new WrRanking(r, true)),
+                                (r) => new WrRankingControl(r, Steps, RankingView));
+                            SetRankingViewItems(WrStandingView,
+                                wrStandingItems.Select(r => new WrRanking(r, false)),
+                                (r) => new WrRankingControl(r, Steps, RankingView));
                             RankingDatePicker.SelectedDate = _currentDate;
                         });
                     }
@@ -113,52 +115,31 @@ namespace TheEliteUI
             _inProgress = false;
         }
 
-        private void SetRankingViewItems(Canvas view, IEnumerable<PlayerRanking> rankingItems)
+        private void SetRankingViewItems<TItem, TControl>(
+            Canvas view,
+            IEnumerable<TItem> rankingItems,
+            Func<TItem, TControl> ctorFunc)
+            where TItem : IRanking
+            where TControl : RankingControl
         {
             foreach (var item in rankingItems)
             {
-                AddOrUpdatePlayerRanking(view, item);
+                AddOrUpdateRanking(view, item, r => ctorFunc(r));
             }
-            ClearObsoleteItemsFromRankinkView<PlayerRankingControl>(view, rankingItems);
+            ClearObsoleteItemsFromRankinkView<TControl>(view, rankingItems.Select(r => (IRanking)r));
         }
 
-        private void SetRankingViewItems(Canvas view, IEnumerable<WrRanking> rankingItems)
+        private void AddOrUpdateRanking<T>(Canvas view, T item, Func<T, RankingControl> ctorFunc)
+            where T : IRanking
         {
-            foreach (var item in rankingItems)
-            {
-                AddOrUpdateWrStandingRanking(view, item);
-            }
-            ClearObsoleteItemsFromRankinkView<WrRankingControl>(view, rankingItems);
-        }
-
-        private void AddOrUpdatePlayerRanking(Canvas view, PlayerRanking item)
-        {
-            var ranking = GetItems<PlayerRankingControl>(view)
+            var ranking = GetItems<RankingControl>(view)
                 .SingleOrDefault(r => r.Item.IsKey(item.Key));
             if (ranking == null)
             {
-                var rk = new PlayerRankingControl(item, Steps, view);
-                view.Children.Add(rk);
+                view.Children.Add(ctorFunc(item));
             }
             else
             {
-                // TODO: set once
-                ranking.UpdateItemtarget(item);
-            }
-        }
-
-        private void AddOrUpdateWrStandingRanking(Canvas view, WrRanking item)
-        {
-            var ranking = GetItems<WrRankingControl>(view)
-                .SingleOrDefault(r => r.Item.IsKey(item.Key));
-            if (ranking == null)
-            {
-                var rk = new WrRankingControl(item, Steps, view);
-                view.Children.Add(rk);
-            }
-            else
-            {
-                // TODO: set once
                 ranking.UpdateItemtarget(item);
             }
         }
