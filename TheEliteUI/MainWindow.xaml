@@ -4,11 +4,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" Background="Gainsboro" WindowStartupLocation="CenterScreen"
-        Title="MainWindow" Height="900" Width="1600">
-    <DockPanel>
+        Title="TheEliteUI" Height="900" Width="1600">
+    <DockPanel Margin="5">
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
-            <DatePicker Name="RankingDatePicker" />
-            <Button Margin="5, 0, 0, 0" Name="AnimationButton" Click="AnimationButton_Click" />
+            <Button Name="AnimationButton" Click="AnimationButton_Click" Height="25" Width="25">
+                <Button.Content>
+                    <Image Height="18" Width="18" Source="/TheEliteUI;component/Resources/noatunplay.png" ToolTip="Start animation" />
+                </Button.Content>
+            </Button>
+            <DatePicker Margin="10, 0, 0, 0" Name="RankingDatePicker" SelectedDate="2020-01-01" Width="120" />
+            <Label Margin="5, 0, 0, 0">Refresh every</Label>
+            <TextBox VerticalContentAlignment="Center" Text="100" MaxWidth="29" MinWidth="29" Name="DaysBetweenRankingText" TextChanged="DaysBetweenRankingText_TextChanged" />
+            <Label>day</Label>
         </StackPanel>
         <Grid DockPanel.Dock="Bottom" Margin="0, 5, 0, 0">
             <Grid.RowDefinitions>

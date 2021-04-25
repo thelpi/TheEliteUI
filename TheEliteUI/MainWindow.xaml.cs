@@ -16,10 +16,9 @@ namespace TheEliteUI
         private const int DelayBeforeRanking = 500;
         private const int TimerDelay = DelayBeforeRanking / Steps;
         private const Game SelectedGame = Game.GoldenEye;
-        private const int DaysBetweenRanking = 100;
 
-        private const string StartAnimationLabel = "Start Animation";
-        private const string StopAnimationLabel = "Stop Animation";
+        private const string StartAnimationLabel = "Start animation";
+        private const string StopAnimationLabel = "Stop animation";
 
         private readonly IEliteProvider _eliteProvider;
         private readonly IClockProvider _clockProvider;
@@ -28,6 +27,7 @@ namespace TheEliteUI
         private bool _inProgress;
         private DateTime _currentDate;
         private int _step = 0;
+        private int _daysBetweenRanking = 100;
 
         public MainWindow()
             : this(new EliteProvider(), new ClockProvider())
@@ -46,7 +46,7 @@ namespace TheEliteUI
             _timer = new Timer(TimerDelay);
             _timer.Elapsed += _timer_Elapsed;
 
-            AnimationButton.Content = StartAnimationLabel;
+            ChangeButtonStyle(false);
             RankingDatePicker.SelectedDate = _currentDate;
         }
 
@@ -70,7 +70,7 @@ namespace TheEliteUI
                 if (_step == 0)
                 {
                     // if the next date is past today, we force today
-                    _currentDate = _currentDate.AddDays(DaysBetweenRanking);
+                    _currentDate = _currentDate.AddDays(_daysBetweenRanking);
                     if (_currentDate > _clockProvider.Today)
                     {
                         _currentDate = _clockProvider.Today;
@@ -194,18 +194,36 @@ namespace TheEliteUI
         {
             _currentDate = RankingDatePicker.SelectedDate.Value;
             _timer.Start();
-            AnimationButton.Content = StopAnimationLabel;
+            ChangeButtonStyle(true);
         }
 
         private void StopAnimation()
         {
             _timer.Stop();
-            AnimationButton.Content = StartAnimationLabel;
+            ChangeButtonStyle(false);
+        }
+
+        private void ChangeButtonStyle(bool toStop)
+        {
+            var imgName = toStop ? "noatunpause.png" : "noatunplay.png";
+            var imgUri = new Uri($"pack://application:,,,/TheEliteUI;component/Resources/{imgName}", UriKind.RelativeOrAbsolute);
+
+            var img = AnimationButton.Content as Image;
+            img.ToolTip = toStop ? StopAnimationLabel : StartAnimationLabel;
+            img.Source = System.Windows.Media.Imaging.BitmapFrame.Create(imgUri);
         }
 
         private IEnumerable<T> GetItems<T>(Canvas view)
         {
             return view.Children.OfType<T>();
+        }
+
+        private void DaysBetweenRankingText_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (int.TryParse(DaysBetweenRankingText.Text, out int daysBetweenRankingText))
+            {
+                _daysBetweenRanking = daysBetweenRankingText;
+            }
         }
     }
 }
