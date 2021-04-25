@@ -16,7 +16,9 @@ namespace TheEliteUI.Dtos
         public DateTime? EndDate { get; set; }
         public int Time { get; set; }
         public string StartPlayerName { get; set; }
+        public string StartPlayerColor { get; set; }
         public string EndPlayerName { get; set; }
+        public string EndPlayerColor { get; set; }
         public int Days { get; set; }
         public int StandingDays { get; set; }
         public bool StillWr { get; set; }

@@ -58,6 +58,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\StageToImageConverter.cs" />
+    <Compile Include="Converters\TimeToTextConverter.cs" />
     <Compile Include="Dtos\StandingWrDto.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="Providers\ClockProvider.cs" />

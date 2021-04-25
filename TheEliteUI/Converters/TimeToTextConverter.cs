@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using System.Windows.Media;
 
 namespace TheEliteUI.Converters
 {
-    public class HexaToColorConverter : IValueConverter
+    public class TimeToTextConverter : IValueConverter
     {
-        private static BrushConverter _brushConverter = new BrushConverter();
-
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null)
-            {
-                value = "ffffff";
-            }
-            return _brushConverter.ConvertFrom($"#{value}");
+            int time = System.Convert.ToInt32(value);
+            var minutes = time / 60;
+            var secondes = time % 60;
+            return $"{minutes.ToString().PadLeft(2, '0')}:{secondes.ToString().PadLeft(2, '0')}";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

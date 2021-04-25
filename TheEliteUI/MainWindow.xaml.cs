@@ -56,7 +56,7 @@ namespace TheEliteUI
 
             _inProgress = true;
             
-            if (_currentDate >= _clockProvider.Today)
+            if (_step == 0 && _currentDate >= _clockProvider.Today)
             {
                 // stop animation after current date
                 Dispatcher.Invoke(StopAnimation);
