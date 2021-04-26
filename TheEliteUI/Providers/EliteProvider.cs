@@ -13,7 +13,7 @@ namespace TheEliteUI.Providers
         private const string BaseUrl = "http://localhost:54460/";
 
         private const string PlayerRankingRoute = "games/{0}/rankings/{1}?page={2}&count={3}&full={4}";
-        private const bool GetFull = false;
+        private const bool GetFull = true;
 
         private const string StandingWrRoute = "games/{0}/longest-standing-world-records?atDate={1}&untied={2}&page={3}&count={4}&stillStanding={5}";
         private const bool StillStanding = false;

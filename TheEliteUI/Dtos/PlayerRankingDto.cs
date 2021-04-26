@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace TheEliteUI.Dtos
 {
@@ -26,5 +27,20 @@ namespace TheEliteUI.Dtos
         public string PlayerColor { get; set; }
         public int Rank { get; set; }
         public int SubRank { get; set; }
+        public IReadOnlyDictionary<Level, int> LevelPoints { get; set; }
+        public IReadOnlyDictionary<Level, int> LevelUntiedRecordsCount { get; set; }
+        public IReadOnlyDictionary<Level, int> LevelRecordsCount { get; set; }
+        public IReadOnlyDictionary<Level, long> LevelCumuledTime { get; set; }
+        public IReadOnlyDictionary<Stage, IReadOnlyDictionary<Level, StageLevelDetails>> Details { get; set; }
+
+        public class StageLevelDetails
+        {
+            [JsonProperty("item1")]
+            public int Rank { get; set; }
+            [JsonProperty("item2")]
+            public int Points { get; set; }
+            [JsonProperty("item3")]
+            public int Time { get; set; }
+        }
     }
 }
