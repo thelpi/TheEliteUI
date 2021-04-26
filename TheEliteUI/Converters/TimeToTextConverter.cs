@@ -6,12 +6,16 @@ namespace TheEliteUI.Converters
 {
     public class TimeToTextConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        internal string InnerConvert(int time)
         {
-            int time = System.Convert.ToInt32(value);
             var minutes = time / 60;
             var secondes = time % 60;
             return $"{minutes.ToString().PadLeft(2, '0')}:{secondes.ToString().PadLeft(2, '0')}";
+        }
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return InnerConvert(System.Convert.ToInt32(value));
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

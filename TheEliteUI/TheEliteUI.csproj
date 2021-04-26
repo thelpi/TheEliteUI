@@ -75,6 +75,9 @@
     <Compile Include="WrRankingControl.xaml.cs">
       <DependentUpon>WrRankingControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PlayerRankingToolTipControl.xaml.cs">
+      <DependentUpon>PlayerRankingToolTipControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WrRankingToolTipControl.xaml.cs">
       <DependentUpon>WrRankingToolTipControl.xaml</DependentUpon>
     </Compile>
@@ -100,6 +103,10 @@
     <Page Include="WrRankingControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PlayerRankingToolTipControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="WrRankingToolTipControl.xaml">
       <SubType>Designer</SubType>

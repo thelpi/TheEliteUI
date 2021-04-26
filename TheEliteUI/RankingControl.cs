@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using TheEliteUI.ViewModels;
 
 namespace TheEliteUI
@@ -34,6 +35,7 @@ namespace TheEliteUI
         public RankingControl()
         {
             // do not remove this controller
+            // compiler needs it
         }
 
         public RankingControl(IRanking item,
@@ -51,9 +53,10 @@ namespace TheEliteUI
             _points = new SourceToTargetByStep(item.Value, steps, 0);
             _rank = new SourceToTargetByStep(item.Rank, steps, item.ItemsCount + 1);
             _valueParser = valueParser;
+
             // the tooltip is rebuild each time the mouse is hover the control
             // but the content while hovering is not dynamic
-            MouseEnter += (s, e) => ToolTip = item.GetToolTip();
+            MouseEnter += (s, e) => ToolTip = (DataContext as IRanking).GetToolTip();
         }
 
         internal void UpdateItemtarget(IRanking item)

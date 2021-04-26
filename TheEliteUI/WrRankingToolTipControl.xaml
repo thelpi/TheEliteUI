@@ -26,21 +26,21 @@
                 <RowDefinition Height="30" />
                 <RowDefinition Height="30" />
             </Grid.RowDefinitions>
-            <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Source="{Binding Path=Dto.Stage, Converter={StaticResource stageImageConverter}}" />
-            <Label Foreground="White" Grid.Row="0" Grid.Column="1" Content="{Binding Path=Dto.Stage}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
-            <Label Foreground="White" Grid.Row="1" Grid.Column="1" Content="{Binding Path=Dto.Level}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
-            <Label Foreground="White" Grid.Row="2" Grid.Column="0" Content="Time:" HorizontalContentAlignment="Right" />
-            <Label Foreground="White" Grid.Row="3" Grid.Column="0" Content="Date:" HorizontalContentAlignment="Right" />
-            <Label Foreground="White" Grid.Row="4" Grid.Column="0" Content="Done by:" HorizontalContentAlignment="Right" />
-            <Label Foreground="White" Grid.Row="5" Grid.Column="0" Content="End date:" HorizontalContentAlignment="Right" />
-            <Label Foreground="White" Grid.Row="6" Grid.Column="0" Content="End by:" HorizontalContentAlignment="Right" />
-            <Label Foreground="White" Grid.Row="7" Grid.Column="0" Content="Days standing:" HorizontalContentAlignment="Right" />
-            <Label Foreground="White" Grid.Row="2" Grid.Column="1" Content="{Binding Path=Dto.Time, Converter={StaticResource timeConverter}}" />
-            <Label Foreground="White" Grid.Row="3" Grid.Column="1" Content="{Binding Path=Dto.StartDate}" />
-            <Label Grid.Row="4" Grid.Column="1" Content="{Binding Path=Dto.StartPlayerName}" Foreground="{Binding Path=Dto.StartPlayerColor, Converter={StaticResource colorConverter}}" />
-            <Label Foreground="White" Grid.Row="5" Grid.Column="1" Content="{Binding Path=Dto.EndDate}" />
-            <Label Grid.Row="6" Grid.Column="1" Content="{Binding Path=Dto.EndPlayerName}" Foreground="{Binding Path=Dto.EndPlayerColor, Converter={StaticResource colorConverter}}" />
-            <Label Foreground="White" Grid.Row="7" Grid.Column="1" Content="{Binding Path=Dto.Days}" />
+            <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Source="{Binding Path=Stage, Converter={StaticResource stageImageConverter}}" />
+            <Label Foreground="Red" Grid.Row="0" Grid.Column="1" Content="{Binding Path=Stage}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+            <Label Foreground="Red" Grid.Row="1" Grid.Column="1" Content="{Binding Path=Level}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+            <Label Foreground="Pink" Grid.Row="2" Grid.Column="0" Content="Time:" HorizontalContentAlignment="Right" />
+            <Label Foreground="Pink" Grid.Row="3" Grid.Column="0" Content="Date:" HorizontalContentAlignment="Right" />
+            <Label Foreground="Pink" Grid.Row="4" Grid.Column="0" Content="Done by:" HorizontalContentAlignment="Right" />
+            <Label Foreground="Pink" Grid.Row="5" Grid.Column="0" Content="End date:" HorizontalContentAlignment="Right" />
+            <Label Foreground="Pink" Grid.Row="6" Grid.Column="0" Content="End by:" HorizontalContentAlignment="Right" />
+            <Label Foreground="Pink" Grid.Row="7" Grid.Column="0" Content="Days standing:" HorizontalContentAlignment="Right" />
+            <Label Foreground="White" Grid.Row="2" Grid.Column="1" Content="{Binding Path=Time, Converter={StaticResource timeConverter}}" />
+            <Label Foreground="White" Grid.Row="3" Grid.Column="1" Content="{Binding Path=StartDate}" />
+            <Label Grid.Row="4" Grid.Column="1" Content="{Binding Path=StartPlayerName}" Foreground="{Binding Path=StartPlayerColor, Converter={StaticResource colorConverter}}" />
+            <Label Foreground="White" Grid.Row="5" Grid.Column="1" Content="{Binding Path=EndDate}" />
+            <Label Grid.Row="6" Grid.Column="1" Content="{Binding Path=EndPlayerName}" Foreground="{Binding Path=EndPlayerColor, Converter={StaticResource colorConverter}}" />
+            <Label Foreground="White" Grid.Row="7" Grid.Column="1" Content="{Binding Path=Days}" />
         </Grid>
     </Border>
 </UserControl>

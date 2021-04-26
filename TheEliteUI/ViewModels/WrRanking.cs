@@ -5,19 +5,19 @@ namespace TheEliteUI.ViewModels
 {
     public class WrRanking : IRanking
     {
-        public StandingWrDto Dto { get; }
+        private readonly StandingWrDto _dto;
 
-        public object Key => string.Concat(Dto.Stage, Dto.Level, Dto.Time);
+        public object Key => string.Concat(_dto.Stage, _dto.Level, _dto.Time);
 
-        public string Label => string.Concat(Dto.Stage, " - ", Dto.Level, " - ", Dto.Time);
+        public string Label => string.Concat(_dto.Stage, " - ", _dto.Level, " - ", _dto.Time);
 
-        public int Value => Dto.Days;
+        public int Value => _dto.Days;
 
         public string HexColor => "ffffff";
 
-        public int Rank => Dto.Rank;
+        public int Rank => _dto.Rank;
 
-        public int Position => Rank + Dto.SubRank;
+        public int Position => Rank + _dto.SubRank;
 
         public double ItemsCount => StandingWrDto.DefaultPaginationLimit;
 
@@ -29,7 +29,7 @@ namespace TheEliteUI.ViewModels
 
         internal WrRanking(StandingWrDto dto, bool untied)
         {
-            Dto = dto;
+            _dto = dto;
             Untied = untied;
         }
 
@@ -42,7 +42,7 @@ namespace TheEliteUI.ViewModels
         {
             return new WrRankingToolTipControl
             {
-                DataContext = this
+                DataContext = _dto
             };
         }
     }

@@ -5,19 +5,19 @@ namespace TheEliteUI.ViewModels
 {
     public class PlayerRanking : IRanking
     {
-        public PlayerRankingDto Dto { get; }
+        private readonly PlayerRankingDto _dto;
 
-        public object Key => Dto.PlayerId;
+        public object Key => _dto.PlayerId;
 
-        public string Label => Dto.PlayerName;
+        public string Label => _dto.PlayerName;
 
-        public int Value => Dto.Points;
+        public int Value => _dto.Points;
 
-        public string HexColor => Dto.PlayerColor;
+        public string HexColor => _dto.PlayerColor;
 
-        public int Rank => Dto.Rank;
+        public int Rank => _dto.Rank;
 
-        public int Position => Rank + Dto.SubRank;
+        public int Position => Rank + _dto.SubRank;
 
         public double ItemsCount => PlayerRankingDto.DefaultPaginationLimit;
 
@@ -27,20 +27,19 @@ namespace TheEliteUI.ViewModels
 
         internal PlayerRanking(PlayerRankingDto dto)
         {
-            Dto = dto;
+            _dto = dto;
         }
 
         public bool IsKey(object otherKey)
         {
             return otherKey != null
                 && double.TryParse(otherKey.ToString(), out double parsedKey)
-                && parsedKey == Dto.PlayerId;
+                && parsedKey == _dto.PlayerId;
         }
 
         public ContentControl GetToolTip()
         {
-            return null;
-            //throw new System.NotImplementedException();
+            return new PlayerRankingToolTipControl(_dto);
         }
     }
 }

@@ -30,7 +30,7 @@ namespace TheEliteUI.Dtos
         public IReadOnlyDictionary<Level, int> LevelPoints { get; set; }
         public IReadOnlyDictionary<Level, int> LevelUntiedRecordsCount { get; set; }
         public IReadOnlyDictionary<Level, int> LevelRecordsCount { get; set; }
-        public IReadOnlyDictionary<Level, long> LevelCumuledTime { get; set; }
+        public IReadOnlyDictionary<Level, int> LevelCumuledTime { get; set; }
         public IReadOnlyDictionary<Stage, IReadOnlyDictionary<Level, StageLevelDetails>> Details { get; set; }
 
         public class StageLevelDetails
