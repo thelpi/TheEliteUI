@@ -1,4 +1,6 @@
-﻿namespace TheEliteUI.ViewModels
+﻿using System.Windows.Controls;
+
+namespace TheEliteUI.ViewModels
 {
     public interface IRanking
     {
@@ -13,5 +15,7 @@
         int Position { get; }
 
         bool IsKey(object otherKey);
+
+        ContentControl GetToolTip();
     }
 }

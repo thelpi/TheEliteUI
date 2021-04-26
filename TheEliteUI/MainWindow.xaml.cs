@@ -84,15 +84,15 @@ namespace TheEliteUI
                             SetRankingViewItems(
                                 RankingView,
                                 rankingItems.Select(r => new PlayerRanking(r)),
-                                CreatePlayerRankingControl);
+                                r => new PlayerRankingControl(r, Steps, RankingView));
                             SetRankingViewItems(
                                 WrStandingUntiedView,
                                 wrStandingUntiedItems.Select(r => new WrRanking(r, true)),
-                                CreateWrRankingControl);
+                                r => new WrRankingControl(r, Steps, RankingView));
                             SetRankingViewItems(
                                 WrStandingView,
                                 wrStandingItems.Select(r => new WrRanking(r, false)),
-                                CreateWrRankingControl);
+                                r => new WrRankingControl(r, Steps, RankingView));
                             RankingDatePicker.SelectedDate = _currentDate;
                         });
                     }
@@ -116,20 +116,6 @@ namespace TheEliteUI
             }
             
             _inProgress = false;
-        }
-
-        private WrRankingControl CreateWrRankingControl(WrRanking r)
-        {
-            var control = new WrRankingControl(r, Steps, RankingView);
-            // the tooltip is rebuild each time the mouse is hover the control
-            // but the content while hovering is not dynamic
-            control.MouseEnter += (s, e) => control.ToolTip = (control.DataContext as WrRanking).GetToolTip();
-            return control;
-        }
-
-        private PlayerRankingControl CreatePlayerRankingControl(PlayerRanking r)
-        {
-            return new PlayerRankingControl(r, Steps, RankingView);
         }
 
         private void SetRankingViewItems<TItem, TControl>(

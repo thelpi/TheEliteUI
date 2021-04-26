@@ -1,4 +1,5 @@
-﻿using TheEliteUI.Dtos;
+﻿using System.Windows.Controls;
+using TheEliteUI.Dtos;
 
 namespace TheEliteUI.ViewModels
 {
@@ -24,6 +25,11 @@ namespace TheEliteUI.ViewModels
 
         public double ValueMax => PlayerRankingDto.MaxPoints;
 
+        internal PlayerRanking(PlayerRankingDto dto)
+        {
+            Dto = dto;
+        }
+
         public bool IsKey(object otherKey)
         {
             return otherKey != null
@@ -31,9 +37,10 @@ namespace TheEliteUI.ViewModels
                 && parsedKey == Dto.PlayerId;
         }
 
-        internal PlayerRanking(PlayerRankingDto dto)
+        public ContentControl GetToolTip()
         {
-            Dto = dto;
+            return null;
+            //throw new System.NotImplementedException();
         }
     }
 }

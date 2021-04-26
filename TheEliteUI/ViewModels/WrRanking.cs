@@ -1,4 +1,5 @@
-﻿using TheEliteUI.Dtos;
+﻿using System.Windows.Controls;
+using TheEliteUI.Dtos;
 
 namespace TheEliteUI.ViewModels
 {
@@ -26,24 +27,23 @@ namespace TheEliteUI.ViewModels
 
         public bool Untied { get; }
 
-        public bool IsKey(object otherKey)
-        {
-            return otherKey?.ToString() == Key.ToString();
-        }
-
         internal WrRanking(StandingWrDto dto, bool untied)
         {
             Dto = dto;
             Untied = untied;
         }
 
-        internal WrRankingToolTipControl GetToolTip()
+        public bool IsKey(object otherKey)
         {
-            var toolTipControl = new WrRankingToolTipControl
+            return otherKey?.ToString() == Key.ToString();
+        }
+
+        public ContentControl GetToolTip()
+        {
+            return new WrRankingToolTipControl
             {
                 DataContext = this
             };
-            return toolTipControl;
         }
     }
 }

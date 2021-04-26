@@ -51,6 +51,9 @@ namespace TheEliteUI
             _points = new SourceToTargetByStep(item.Value, steps, 0);
             _rank = new SourceToTargetByStep(item.Rank, steps, item.ItemsCount + 1);
             _valueParser = valueParser;
+            // the tooltip is rebuild each time the mouse is hover the control
+            // but the content while hovering is not dynamic
+            MouseEnter += (s, e) => ToolTip = item.GetToolTip();
         }
 
         internal void UpdateItemtarget(IRanking item)
