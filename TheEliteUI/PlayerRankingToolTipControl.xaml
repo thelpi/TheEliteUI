@@ -11,7 +11,53 @@
         <localConverters:TimeToTextConverter x:Key="timeConverter" />
     </UserControl.Resources>
     <Border BorderThickness="2" CornerRadius="3" BorderBrush="Navy">
-        <Grid Background="Black">
+        <ListView Name="LevelsView" Background="Black">
+            <ListView.View>
+                <GridView AllowsColumnReorder="False">
+                    <GridViewColumn Width="100">
+                        <GridViewColumnHeader Content="Level" Background="Black" Foreground="Pink" Height="30" />
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label Height="30" Background="Black" Content="{Binding Path=Level}" Foreground="Red" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="75">
+                        <GridViewColumnHeader Content="Points" Background="Black" Foreground="Pink" Height="30" />
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label Height="30" Background="Black" Content="{Binding Path=Points}" Foreground="White" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="75">
+                        <GridViewColumnHeader Content="WR" Background="Black" Foreground="Pink" Height="30" />
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label Height="30" Background="Black" Content="{Binding Path=WrTiedCount}" Foreground="White" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="75">
+                        <GridViewColumnHeader Content="UWR" Background="Black" Foreground="Pink" Height="30" />
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label Height="30" Background="Black" Content="{Binding Path=WrUntiedCount}" Foreground="White" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="75">
+                        <GridViewColumnHeader Content="Time" Background="Black" Foreground="Pink" Height="30" />
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label Height="30" Background="Black" Content="{Binding Path=Time, Converter={StaticResource timeConverter}}" Foreground="White" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <!--<Grid Background="Black">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100" />
                 <ColumnDefinition Width="75" />
@@ -28,18 +74,6 @@
             <Label Foreground="Pink" Grid.Row="0" Grid.Column="1" Content="Points" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
             <Label Foreground="Pink" Grid.Row="0" Grid.Column="2" Content="WR (U)" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
             <Label Foreground="Pink" Grid.Row="0" Grid.Column="3" Content="Time" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
-            <Label Name="EasyLabel" Foreground="Red" Grid.Row="1" Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
-            <Label Name="EasyPointsLabel" Foreground="White" Grid.Row="1" Grid.Column="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" />
-            <Label Name="EasyWrLabel" Foreground="White" Grid.Row="1" Grid.Column="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" />
-            <Label Name="EasyTimeLabel" Foreground="White" Grid.Row="1" Grid.Column="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" />
-            <Label Name="MediumLabel" Foreground="Red" Grid.Row="2" Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
-            <Label Name="MediumPointsLabel" Foreground="White" Grid.Row="2" Grid.Column="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" />
-            <Label Name="MediumWrLabel" Foreground="White" Grid.Row="2" Grid.Column="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" />
-            <Label Name="MediumTimeLabel" Foreground="White" Grid.Row="2" Grid.Column="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" />
-            <Label Name="HardLabel" Foreground="Red" Grid.Row="3" Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
-            <Label Name="HardPointsLabel" Foreground="White" Grid.Row="3" Grid.Column="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" />
-            <Label Name="HardWrLabel" Foreground="White" Grid.Row="3" Grid.Column="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" />
-            <Label Name="HardTimeLabel" Foreground="White" Grid.Row="3" Grid.Column="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" />
-        </Grid>
+        </Grid>-->
     </Border>
 </UserControl>
