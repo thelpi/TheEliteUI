@@ -9,5 +9,7 @@ namespace TheEliteUI.Providers
         IReadOnlyCollection<PlayerRankingDto> GetRanking(Game game, DateTime date, int page, int limit);
 
         IReadOnlyCollection<StandingWrDto> GetStandingWr(Game game, DateTime atDate, bool untied, int page, int limit);
+
+        IReadOnlyCollection<StageEntryCountDto> GetStagesEntriesCount(Game game, DateTime startDate, DateTime endDate);
     }
 }

@@ -59,8 +59,12 @@
     </ApplicationDefinition>
     <Compile Include="Converters\StageToImageConverter.cs" />
     <Compile Include="Converters\TimeToTextConverter.cs" />
+    <Compile Include="Dtos\StageEntryCountDto.cs" />
     <Compile Include="Dtos\StandingWrDto.cs" />
     <Compile Include="Level.cs" />
+    <Compile Include="LevelHeatMapWindow.xaml.cs">
+      <DependentUpon>LevelHeatMapWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Providers\ClockProvider.cs" />
     <Compile Include="Providers\IClockProvider.cs" />
     <Compile Include="PlayerRankingControl.xaml.cs">
@@ -81,6 +85,10 @@
     <Compile Include="WrRankingToolTipControl.xaml.cs">
       <DependentUpon>WrRankingToolTipControl.xaml</DependentUpon>
     </Compile>
+    <Page Include="LevelHeatMapWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
