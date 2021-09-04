@@ -1,17 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using TheEliteUI.Dtos;
 using TheEliteUI.Providers;
 
 namespace TheEliteUI
@@ -38,55 +29,52 @@ namespace TheEliteUI
 
         private void Initialize()
         {
-            const int threshold = 50;
-
             const int stagesCount = 20;
+            const int years = 20;
+            var endDateExclusive = new DateTime(2021, 9, 1);
+            var startDateInclusive = endDateExclusive.AddYears(-years);
+            var totalMonthsCount = years * 12;
 
-            //var startDate = PlayerRankingDto.RankingStart[Game.GoldenEye];
-            var years = 10;
-            var today = _clockProvider.Today;
-            var startDate = today.AddDays(-1).AddMonths(-years * 12);
+            //var avg1 = 1 / (double)stagesCount;
+            //var avg2 = 1 / (double)totalMonthsCount;
+            //var avg = Math.Sqrt(avg1 * avg1 + avg2 * avg2) / Math.Sqrt(2);
 
-            var totalDaysCount = (int)Math.Floor((today - startDate).TotalDays);
-
-            var currentColIndex = 0;
-            var currentDate = startDate;
-            int startAtMonth = currentDate.Month;
+            int startAtMonth = startDateInclusive.Month;
             int span = 0;
             var col = 1;
-            do
+            var currentColIndex = 0;
+
+            var currentDate = startDateInclusive;
+            for (int i = 0; i < totalMonthsCount; i++)
             {
                 var nextDate = currentDate.AddMonths(1);
-
-                var periodDays = (int)Math.Floor((nextDate - currentDate).TotalDays);
-
-                var daysRate = periodDays / (decimal)totalDaysCount;
-
-                var stagesStats = _eliteProvider.GetStagesEntriesCount(Game.GoldenEye, currentDate, nextDate, startDate, today);
 
                 Dispatcher.Invoke(() => MainGrid.ColumnDefinitions.Add(new ColumnDefinition()));
                 currentColIndex++;
 
+                var stagesStats = _eliteProvider.GetStagesEntriesCount(Game.GoldenEye, currentDate, nextDate, startDateInclusive, endDateExclusive);
+
                 foreach (var stageStats in stagesStats)
                 {
-                    var avgCountExpected = stageStats.TotalEntriesCount * daysRate;
-                    var avgCountExpected2 = stageStats.AllStagesEntriesCount / (decimal)stagesCount;
+                    var rate1 = stageStats.PeriodEntriesCount / (double)stageStats.AllStagesEntriesCount;
+                    var rate2 = stageStats.PeriodEntriesCount / (double)stageStats.TotalEntriesCount;
 
-                    var rate = avgCountExpected == 0 ? 0 : stageStats.PeriodEntriesCount / avgCountExpected;
-                    var rate2 = avgCountExpected2 == 0 ? 0 : stageStats.PeriodEntriesCount / avgCountExpected2;
+                    var rate = Math.Sqrt(rate1 * rate1 + rate2 * rate2) / Math.Sqrt(2);
 
-                    var finalRate = (rate * rate2 * rate2 * rate2 * rate2) > threshold ? threshold : (rate * rate2 * rate2 * rate2 * rate2);
+                    System.Diagnostics.Debug.WriteLine(rate);
 
-                    var noRedValue = (byte)(255 - Math.Floor((255 * finalRate) / threshold));
+                    var rateToScale = rate == 0 ? 0 : rate / Math.Sqrt(rate);
+
+                    var notRedBytes = Convert.ToByte(255 - (rateToScale * 255));
 
                     Dispatcher.Invoke(() =>
                     {
                         var rectangle = new Canvas
                         {
-                            Background = new SolidColorBrush(Color.FromRgb(255, noRedValue, 0)),
+                            Background = new SolidColorBrush(Color.FromRgb(255, notRedBytes, notRedBytes)),
                             VerticalAlignment = VerticalAlignment.Stretch,
                             HorizontalAlignment = HorizontalAlignment.Stretch,
-                            ToolTip = $"{stageStats.Stage} - {stageStats.StartDate.ToString("yyyy-MM-dd")} - {stageStats.EndDate.ToString("yyyy-MM-dd")} - {stageStats.PeriodEntriesCount} runs"
+                            ToolTip = $"{stageStats.Stage} - {stageStats.PeriodEntriesCount} runs"
                         };
 
                         rectangle.SetValue(Grid.RowProperty, ((int)stageStats.Stage) - 1);
@@ -96,8 +84,8 @@ namespace TheEliteUI
                     });
                 }
 
-                bool willBreak = nextDate.AddDays(1) >= today;
-                if (currentDate.Month == 12 || willBreak)
+                var isLastLoop = i == totalMonthsCount - 1;
+                if (currentDate.Month == 12 || isLastLoop)
                 {
                     Dispatcher.Invoke(() =>
                     {
@@ -118,7 +106,7 @@ namespace TheEliteUI
                         label.SetValue(Grid.RowProperty, stagesCount);
                         label.SetValue(Grid.ColumnProperty, col);
 
-                        span = willBreak ? currentDate.Month : 12 - (startAtMonth - 1);
+                        span = isLastLoop ? currentDate.Month : 12 - (startAtMonth - 1);
 
                         label.SetValue(Grid.ColumnSpanProperty, span);
 
@@ -129,7 +117,6 @@ namespace TheEliteUI
 
                 currentDate = nextDate;
             }
-            while (currentDate.AddDays(1) < today);
         }
     }
 }
