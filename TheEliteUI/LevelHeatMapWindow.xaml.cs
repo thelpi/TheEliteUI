@@ -38,17 +38,23 @@ namespace TheEliteUI
 
         private void Initialize()
         {
-            var threshold = 8;
+            const int threshold = 50;
+
+            const int stagesCount = 20;
 
             //var startDate = PlayerRankingDto.RankingStart[Game.GoldenEye];
-            var today = _clockProvider.Today.AddDays(-1);
-            var startDate = today.AddMonths(-20 * 12);
+            var years = 10;
+            var today = _clockProvider.Today;
+            var startDate = today.AddDays(-1).AddMonths(-years * 12);
 
-            var totalDaysCount = (int)Math.Floor((today.AddDays(1) - startDate).TotalDays);
+            var totalDaysCount = (int)Math.Floor((today - startDate).TotalDays);
 
-            var currentColIndex = 1;
+            var currentColIndex = 0;
             var currentDate = startDate;
-            while (currentDate < today)
+            int startAtMonth = currentDate.Month;
+            int span = 0;
+            var col = 1;
+            do
             {
                 var nextDate = currentDate.AddMonths(1);
 
@@ -56,28 +62,30 @@ namespace TheEliteUI
 
                 var daysRate = periodDays / (decimal)totalDaysCount;
 
-                var stagesStats = _eliteProvider.GetStagesEntriesCount(Game.GoldenEye, currentDate, nextDate);
+                var stagesStats = _eliteProvider.GetStagesEntriesCount(Game.GoldenEye, currentDate, nextDate, startDate, today);
 
-                Dispatcher.Invoke(() =>  MainGrid.ColumnDefinitions.Add(new ColumnDefinition()));
+                Dispatcher.Invoke(() => MainGrid.ColumnDefinitions.Add(new ColumnDefinition()));
                 currentColIndex++;
 
                 foreach (var stageStats in stagesStats)
                 {
                     var avgCountExpected = stageStats.TotalEntriesCount * daysRate;
+                    var avgCountExpected2 = stageStats.AllStagesEntriesCount / (decimal)stagesCount;
 
-                    var rate = stageStats.PeriodEntriesCount / avgCountExpected;
+                    var rate = avgCountExpected == 0 ? 0 : stageStats.PeriodEntriesCount / avgCountExpected;
+                    var rate2 = avgCountExpected2 == 0 ? 0 : stageStats.PeriodEntriesCount / avgCountExpected2;
 
-                    rate = rate > threshold ? threshold : rate;
+                    var finalRate = (rate * rate2 * rate2 * rate2 * rate2) > threshold ? threshold : (rate * rate2 * rate2 * rate2 * rate2);
 
-                    var noRedValue = (byte)(255 - Math.Floor((255 * rate) / threshold));
+                    var noRedValue = (byte)(255 - Math.Floor((255 * finalRate) / threshold));
 
                     Dispatcher.Invoke(() =>
                     {
-                        var rectangle = new Rectangle
+                        var rectangle = new Canvas
                         {
-                            Fill = new SolidColorBrush(Color.FromRgb(255, noRedValue, noRedValue)),
-                            Width = 7,
-                            Height = 50,
+                            Background = new SolidColorBrush(Color.FromRgb(255, noRedValue, 0)),
+                            VerticalAlignment = VerticalAlignment.Stretch,
+                            HorizontalAlignment = HorizontalAlignment.Stretch,
                             ToolTip = $"{stageStats.Stage} - {stageStats.StartDate.ToString("yyyy-MM-dd")} - {stageStats.EndDate.ToString("yyyy-MM-dd")} - {stageStats.PeriodEntriesCount} runs"
                         };
 
@@ -88,32 +96,40 @@ namespace TheEliteUI
                     });
                 }
 
+                bool willBreak = nextDate.AddDays(1) >= today;
+                if (currentDate.Month == 12 || willBreak)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        var label = new Label
+                        {
+                            Content = currentDate.Year,
+                            VerticalContentAlignment = VerticalAlignment.Center,
+                            HorizontalContentAlignment = HorizontalAlignment.Center,
+                            VerticalAlignment = VerticalAlignment.Stretch,
+                            HorizontalAlignment = HorizontalAlignment.Stretch,
+                            Background = Brushes.White,
+                            BorderThickness = new Thickness(1),
+                            BorderBrush = Brushes.DarkBlue
+                        };
+
+                        col += span;
+
+                        label.SetValue(Grid.RowProperty, stagesCount);
+                        label.SetValue(Grid.ColumnProperty, col);
+
+                        span = willBreak ? currentDate.Month : 12 - (startAtMonth - 1);
+
+                        label.SetValue(Grid.ColumnSpanProperty, span);
+
+                        MainGrid.Children.Add(label);
+                    });
+                    startAtMonth = 1;
+                }
+
                 currentDate = nextDate;
             }
-
-            Dispatcher.Invoke(() =>
-            {
-                MainGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(20) });
-                for (int i = 0; i < 20; i++)
-                {
-                    var year = i + 2002;
-                    var label = new Label
-                    {
-                        Content = year,
-                        VerticalContentAlignment = VerticalAlignment.Center,
-                        HorizontalContentAlignment = HorizontalAlignment.Center,
-                        VerticalAlignment = VerticalAlignment.Center,
-                        HorizontalAlignment = HorizontalAlignment.Center,
-                        Background = Brushes.White
-                    };
-
-                    label.SetValue(Grid.RowProperty, 20);
-                    label.SetValue(Grid.ColumnProperty, (i * 12) + 1);
-                    label.SetValue(Grid.ColumnSpanProperty, 12);
-
-                    MainGrid.Children.Add(label);
-                }
-            });
+            while (currentDate.AddDays(1) < today);
         }
     }
 }

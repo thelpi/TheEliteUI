@@ -10,6 +10,6 @@ namespace TheEliteUI.Providers
 
         IReadOnlyCollection<StandingWrDto> GetStandingWr(Game game, DateTime atDate, bool untied, int page, int limit);
 
-        IReadOnlyCollection<StageEntryCountDto> GetStagesEntriesCount(Game game, DateTime startDate, DateTime endDate);
+        IReadOnlyCollection<StageEntryCountDto> GetStagesEntriesCount(Game game, DateTime startDate, DateTime endDate, DateTime globalStartDate, DateTime globalEndDate);
     }
 }
