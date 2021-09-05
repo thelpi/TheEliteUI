@@ -11,5 +11,9 @@ namespace TheEliteUI.Dtos
         public int AllStagesEntriesCount { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+
+        public double EntryRate => Math.Sqrt(
+            PeriodEntriesCount / (double)AllStagesEntriesCount
+            * (PeriodEntriesCount / (double)TotalEntriesCount));
     }
 }

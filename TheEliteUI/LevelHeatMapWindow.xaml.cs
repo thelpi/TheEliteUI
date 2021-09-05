@@ -1,8 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using TheEliteUI.Providers;
 
 namespace TheEliteUI
@@ -14,6 +19,7 @@ namespace TheEliteUI
     {
         private readonly IEliteProvider _eliteProvider;
         private readonly IClockProvider _clockProvider;
+        private readonly Timer _timer;
 
         public LevelHeatMapWindow() : this(new EliteProvider(), new ClockProvider()) { }
 
@@ -23,6 +29,21 @@ namespace TheEliteUI
 
             _eliteProvider = eliteProvider;
             _clockProvider = clockProvider;
+            _timer = new Timer(2000);
+            _timer.AutoReset = false;
+            _timer.Elapsed += (a, b) =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    GridScreenshot();
+                    MainGrid.Children.OfType<TextBox>().ToList().ForEach(t => t.Text = string.Empty);
+                });
+                System.Threading.Thread.Sleep(2000);
+                Dispatcher.Invoke(() =>
+                {
+                    GridScreenshot();
+                });
+            };
 
             Task.Run(() => Initialize());
         }
@@ -30,54 +51,76 @@ namespace TheEliteUI
         private void Initialize()
         {
             const int stagesCount = 20;
-            const int years = 20;
+            const int years = 22;
             var endDateExclusive = new DateTime(2021, 9, 1);
             var startDateInclusive = endDateExclusive.AddYears(-years);
             var totalMonthsCount = years * 12;
 
-            //var avg1 = 1 / (double)stagesCount;
-            //var avg2 = 1 / (double)totalMonthsCount;
-            //var avg = Math.Sqrt(avg1 * avg1 + avg2 * avg2) / Math.Sqrt(2);
+            var entries = new Dictionary<int, List<Dtos.StageEntryCountDto>>();
 
-            int startAtMonth = startDateInclusive.Month;
-            int span = 0;
-            var col = 1;
-            var currentColIndex = 0;
-
+            var entriesMaxRate = 0.07; // arbitrary but seems OK
             var currentDate = startDateInclusive;
-            for (int i = 0; i < totalMonthsCount; i++)
+            for (var i = 0; i < totalMonthsCount; i++)
             {
                 var nextDate = currentDate.AddMonths(1);
 
-                Dispatcher.Invoke(() => MainGrid.ColumnDefinitions.Add(new ColumnDefinition()));
+                var stagesStats = _eliteProvider
+                    .GetStagesEntriesCount(Game.GoldenEye, currentDate, nextDate, startDateInclusive, endDateExclusive, true)
+                    .OrderBy(_ => (int)_.Stage)
+                    .ThenBy(_ => (int)_.Level.Value)
+                    .ToList();
+
+                /* it works, but Bunker2 in august 2021 fucks up the scale */
+                //var localMax = stagesStats.Max(_ => _.EntryRate);
+                //if (double.IsNaN(entriesMaxRate) || localMax > entriesMaxRate)
+                //{
+                //   entriesMaxRate = localMax;
+                //}
+
+                entries.Add(i, stagesStats);
+
+                currentDate = nextDate;
+            }
+
+            var startAtMonth = startDateInclusive.Month;
+            var span = 0;
+            var col = 1;
+            var currentColIndex = 0;
+
+            currentDate = startDateInclusive;
+            for (var i = 0; i < totalMonthsCount; i++)
+            {
+                var nextDate = currentDate.AddMonths(1);
+
+                Dispatcher.Invoke(() => MainGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(30) }));
                 currentColIndex++;
 
-                var stagesStats = _eliteProvider.GetStagesEntriesCount(Game.GoldenEye, currentDate, nextDate, startDateInclusive, endDateExclusive);
-
-                foreach (var stageStats in stagesStats)
+                foreach (var stageStats in entries[i])
                 {
-                    var rate1 = stageStats.PeriodEntriesCount / (double)stageStats.AllStagesEntriesCount;
-                    var rate2 = stageStats.PeriodEntriesCount / (double)stageStats.TotalEntriesCount;
-
-                    var rate = Math.Sqrt(rate1 * rate1 + rate2 * rate2) / Math.Sqrt(2);
-
-                    System.Diagnostics.Debug.WriteLine(rate);
-
-                    var rateToScale = rate == 0 ? 0 : rate / Math.Sqrt(rate);
-
-                    var notRedBytes = Convert.ToByte(255 - (rateToScale * 255));
+                    var rateConsidered = double.IsNaN(stageStats.EntryRate)
+                        ? 0
+                        : (stageStats.EntryRate > entriesMaxRate
+                            ? entriesMaxRate
+                            : stageStats.EntryRate);
+                    var notRedBytes = Convert.ToByte(255 - ((rateConsidered / entriesMaxRate) * 255));
 
                     Dispatcher.Invoke(() =>
                     {
-                        var rectangle = new Canvas
+                        var rectangle = new TextBox
                         {
                             Background = new SolidColorBrush(Color.FromRgb(255, notRedBytes, notRedBytes)),
                             VerticalAlignment = VerticalAlignment.Stretch,
                             HorizontalAlignment = HorizontalAlignment.Stretch,
-                            ToolTip = $"{stageStats.Stage} - {stageStats.PeriodEntriesCount} runs"
+                            Text = $"{stageStats.PeriodEntriesCount}",
+                            HorizontalContentAlignment = HorizontalAlignment.Center,
+                            VerticalContentAlignment = VerticalAlignment.Center,
+                            FontSize = 10
                         };
 
-                        rectangle.SetValue(Grid.RowProperty, ((int)stageStats.Stage) - 1);
+                        var baseRowIndex = ((int)stageStats.Stage - 1) * 3;
+                        var addRowIndex = (int)stageStats.Level.Value - 1;
+
+                        rectangle.SetValue(Grid.RowProperty, baseRowIndex + addRowIndex);
                         rectangle.SetValue(Grid.ColumnProperty, currentColIndex);
 
                         MainGrid.Children.Add(rectangle);
@@ -103,7 +146,7 @@ namespace TheEliteUI
 
                         col += span;
 
-                        label.SetValue(Grid.RowProperty, stagesCount);
+                        label.SetValue(Grid.RowProperty, stagesCount * 3);
                         label.SetValue(Grid.ColumnProperty, col);
 
                         span = isLastLoop ? currentDate.Month : 12 - (startAtMonth - 1);
@@ -116,6 +159,53 @@ namespace TheEliteUI
                 }
 
                 currentDate = nextDate;
+            }
+
+            Dispatcher.Invoke(() =>
+            {
+                MainGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                var colIndex = MainGrid.ColumnDefinitions.Count - 1;
+                for (int i = 0; i < stagesCount; i++)
+                {
+                    var img = new Image
+                    {
+                        Source = new BitmapImage(new Uri($"pack://application:,,,/TheEliteUI;component/Resources/Stages/{i + 1}.jpg"))
+                    };
+
+                    img.SetValue(Grid.RowProperty, i * 3);
+                    img.SetValue(Grid.RowSpanProperty, 3);
+                    img.SetValue(Grid.ColumnProperty, colIndex);
+
+                    MainGrid.Children.Add(img);
+                }
+            });
+
+            _timer.Start();
+        }
+
+        private void GridScreenshot()
+        {
+            try
+            {
+                var width = (int)MainGrid.ActualWidth + 10;
+                var height = (int)MainGrid.ActualHeight + 10;
+
+                var renderBitmap = new RenderTargetBitmap(width, height, 96d, 96d, PixelFormats.Pbgra32);
+                MainGrid.Measure(new Size(width, height));
+                MainGrid.Arrange(new Rect(new Size(width, height)));
+
+                renderBitmap.Render(MainGrid);
+
+                var pngImage = new PngBitmapEncoder();
+                pngImage.Frames.Add(BitmapFrame.Create(renderBitmap));
+                using (var fileStream = File.Create($@"C:\Users\LPI\Desktop\souk_again\yo\{DateTime.Now.ToString("yyyyMMddhhmmss")}.jpg"))
+                {
+                    pngImage.Save(fileStream);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error while screenshoting : " + ex.Message);
             }
         }
     }

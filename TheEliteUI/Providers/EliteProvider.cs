@@ -18,7 +18,7 @@ namespace TheEliteUI.Providers
         private const string StandingWrRoute = "games/{0}/longest-standing-world-records?atDate={1}&untied={2}&page={3}&count={4}&stillStanding={5}";
         private const bool StillStanding = false;
 
-        private const string StagesEntriesCountRoute = "games/{0}/entries-count?startDate={1}&endDate={2}&globalStartDate={3}&globalEndDate={4}";
+        private const string StagesEntriesCountRoute = "games/{0}/entries-count?startDate={1}&endDate={2}&globalStartDate={3}&globalEndDate={4}&levelDetails={5}";
 
         private readonly HttpClient _client;
 
@@ -38,9 +38,9 @@ namespace TheEliteUI.Providers
             return GetContent<IReadOnlyCollection<PlayerRankingDto>>(route);
         }
 
-        public IReadOnlyCollection<StageEntryCountDto> GetStagesEntriesCount(Game game, DateTime startDate, DateTime endDate, DateTime globalStartDate, DateTime globalEndDate)
+        public IReadOnlyCollection<StageEntryCountDto> GetStagesEntriesCount(Game game, DateTime startDate, DateTime endDate, DateTime globalStartDate, DateTime globalEndDate, bool levelDetails)
         {
-            var route = string.Format(StagesEntriesCountRoute, (int)game, ToDateString(startDate), ToDateString(endDate), ToDateString(globalStartDate), ToDateString(globalEndDate));
+            var route = string.Format(StagesEntriesCountRoute, (int)game, ToDateString(startDate), ToDateString(endDate), ToDateString(globalStartDate), ToDateString(globalEndDate), levelDetails);
 
             return GetContent<IReadOnlyCollection<StageEntryCountDto>>(route);
         }

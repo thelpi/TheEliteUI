@@ -4,54 +4,95 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TheEliteUI"
-        mc:Ignorable="d" Background="Black"
-        Title="LevelHeatMapWindow" WindowStartupLocation="CenterScreen" SizeToContent="Width">
+        mc:Ignorable="d" Background="Black" SizeToContent="WidthAndHeight"
+        Title="LevelHeatMapWindow" Height="600" Width="800">
     <Grid Name="MainGrid" Margin="5">
         <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <Image Grid.Column="0" Grid.Row="0" Source="./Resources/Stages/1.jpg" />
-        <Image Grid.Column="0" Grid.Row="1" Source="./Resources/Stages/2.jpg" />
-        <Image Grid.Column="0" Grid.Row="2" Source="./Resources/Stages/3.jpg" />
-        <Image Grid.Column="0" Grid.Row="3" Source="./Resources/Stages/4.jpg" />
-        <Image Grid.Column="0" Grid.Row="4" Source="./Resources/Stages/5.jpg" />
-        <Image Grid.Column="0" Grid.Row="5" Source="./Resources/Stages/6.jpg" />
-        <Image Grid.Column="0" Grid.Row="6" Source="./Resources/Stages/7.jpg" />
-        <Image Grid.Column="0" Grid.Row="7" Source="./Resources/Stages/8.jpg" />
-        <Image Grid.Column="0" Grid.Row="8" Source="./Resources/Stages/9.jpg" />
-        <Image Grid.Column="0" Grid.Row="9" Source="./Resources/Stages/10.jpg" />
-        <Image Grid.Column="0" Grid.Row="10" Source="./Resources/Stages/11.jpg" />
-        <Image Grid.Column="0" Grid.Row="11" Source="./Resources/Stages/12.jpg" />
-        <Image Grid.Column="0" Grid.Row="12" Source="./Resources/Stages/13.jpg" />
-        <Image Grid.Column="0" Grid.Row="13" Source="./Resources/Stages/14.jpg" />
-        <Image Grid.Column="0" Grid.Row="14" Source="./Resources/Stages/15.jpg" />
-        <Image Grid.Column="0" Grid.Row="15" Source="./Resources/Stages/16.jpg" />
-        <Image Grid.Column="0" Grid.Row="16" Source="./Resources/Stages/17.jpg" />
-        <Image Grid.Column="0" Grid.Row="17" Source="./Resources/Stages/18.jpg" />
-        <Image Grid.Column="0" Grid.Row="18" Source="./Resources/Stages/19.jpg" />
-        <Image Grid.Column="0" Grid.Row="19" Source="./Resources/Stages/20.jpg" />
+        <Image Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Source="./Resources/Stages/1.jpg" />
+        <Image Grid.Column="0" Grid.Row="3" Grid.RowSpan="3" Source="./Resources/Stages/2.jpg" />
+        <Image Grid.Column="0" Grid.Row="6" Grid.RowSpan="3" Source="./Resources/Stages/3.jpg" />
+        <Image Grid.Column="0" Grid.Row="9" Grid.RowSpan="3" Source="./Resources/Stages/4.jpg" />
+        <Image Grid.Column="0" Grid.Row="12" Grid.RowSpan="3" Source="./Resources/Stages/5.jpg" />
+        <Image Grid.Column="0" Grid.Row="15" Grid.RowSpan="3" Source="./Resources/Stages/6.jpg" />
+        <Image Grid.Column="0" Grid.Row="18" Grid.RowSpan="3" Source="./Resources/Stages/7.jpg" />
+        <Image Grid.Column="0" Grid.Row="21" Grid.RowSpan="3" Source="./Resources/Stages/8.jpg" />
+        <Image Grid.Column="0" Grid.Row="24" Grid.RowSpan="3" Source="./Resources/Stages/9.jpg" />
+        <Image Grid.Column="0" Grid.Row="27" Grid.RowSpan="3" Source="./Resources/Stages/10.jpg" />
+        <Image Grid.Column="0" Grid.Row="30" Grid.RowSpan="3" Source="./Resources/Stages/11.jpg" />
+        <Image Grid.Column="0" Grid.Row="33" Grid.RowSpan="3" Source="./Resources/Stages/12.jpg" />
+        <Image Grid.Column="0" Grid.Row="36" Grid.RowSpan="3" Source="./Resources/Stages/13.jpg" />
+        <Image Grid.Column="0" Grid.Row="39" Grid.RowSpan="3" Source="./Resources/Stages/14.jpg" />
+        <Image Grid.Column="0" Grid.Row="42" Grid.RowSpan="3" Source="./Resources/Stages/15.jpg" />
+        <Image Grid.Column="0" Grid.Row="45" Grid.RowSpan="3" Source="./Resources/Stages/16.jpg" />
+        <Image Grid.Column="0" Grid.Row="48" Grid.RowSpan="3" Source="./Resources/Stages/17.jpg" />
+        <Image Grid.Column="0" Grid.Row="51" Grid.RowSpan="3" Source="./Resources/Stages/18.jpg" />
+        <Image Grid.Column="0" Grid.Row="54" Grid.RowSpan="3" Source="./Resources/Stages/19.jpg" />
+        <Image Grid.Column="0" Grid.Row="57" Grid.RowSpan="3" Source="./Resources/Stages/20.jpg" />
+        <!--<Button Grid.Column="0" Grid.Row="60" Name="ScBtn" Width="10" Height="10" Click="ScBtn_Click" IsEnabled="False" />-->
     </Grid>
 </Window>
